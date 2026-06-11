@@ -1,18 +1,16 @@
 const mongoose = require("mongoose");
-const express = require("express");
-
-const app = express();
 const url = "mongodb://localhost:27017";
 
-mongoose
-  .connect(url, {
-    dbName: "StudySproutDB",
-  })
-  .then(() => {
-    app.listen(3000, () => {
-      console.log("Connected to Database. server running on localhost : 3000");
+async function connectDB() {
+  try {
+    await mongoose.connect(url, {
+      dbName: "StudySproutDB",
     });
-  })
-  .catch((err) => {
-    console.error("Connection Error. ", err);
-  });
+    console.log("Connected to MongoDB: ", mongoose.connection.host);
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    process.exit(1);
+  }
+}
+
+module.exports = connectDB;
