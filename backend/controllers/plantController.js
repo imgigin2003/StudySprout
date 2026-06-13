@@ -1,6 +1,6 @@
 const Plant = require("../models/Plant");
 
-const createPlant = async (req, res) => {
+const createPlant = async (req, res, next) => {
   const { name, plantType, xpValue, growthDuration, image, description } =
     req.body;
 
@@ -17,26 +17,21 @@ const createPlant = async (req, res) => {
       .status(201)
       .json({ message: "Plant created successfully", plant: newPlant });
   } catch (error) {
-    console.error("Error Creating Plant:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to create plant", error: error.message });
+    next(error);
   }
 };
 
-const getAllPlants = async (req, res) => {
+const getAllPlants = async (req, res, next) => {
   try {
     const plants = await Plant.find();
     res.status(200).json({ plants });
   } catch (error) {
     console.error("Error Fetching Plants: ", error);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch plants ", error: error.message });
+    next(error);
   }
 };
 
-const getPlantById = async (req, res) => {
+const getPlantById = async (req, res, next) => {
   try {
     const plantId = req.params.id;
     const getPlant = await Plant.findById(plantId);
@@ -45,10 +40,7 @@ const getPlantById = async (req, res) => {
     }
     res.status(200).json({ plant: getPlant });
   } catch (error) {
-    console.error("Error Fetching Plant: ", error);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch plant ", error: error.message });
+    next(error);
   }
 };
 module.exports = { createPlant, getAllPlants, getPlantById };

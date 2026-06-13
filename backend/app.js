@@ -1,19 +1,22 @@
 const express = require("express");
 const cors = require("cors");
-const PORT = 3000;
+require("dotenv").config();
+const errorHandler = require("./middleware/errorMiddleware");
+const authRoutes = require("./routes/authRoutes");
+const plantRoutes = require("./routes/plantRoutes");
+const gardenRoutes = require("./routes/gardenRoutes");
+const displayRoutes = require("./routes/displayRoutes");
 
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static("Public"));
-// to integrate with react
 app.use(cors());
+app.use(errorHandler);
 
-app.get("/api/data", (req, res) => {
-  res.json({ message: "Hello from Node.js!" });
-});
+app.use("/api/plant", plantRoutes);
+app.use("/api/garden", gardenRoutes);
+app.use("/api/display", displayRoutes);
+app.use("/api/auth", authRoutes);
 
-app.listen(PORT, () => {
-  console.log("Server running on localhost : 3000");
-});
+module.exports = app;

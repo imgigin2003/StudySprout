@@ -1,6 +1,6 @@
 const User = require("../models/User");
 
-const displayPlant = async (req, res) => {
+const displayPlant = async (req, res, next) => {
   try {
     const { plantId } = req.body;
     if (!plantId) {
@@ -25,15 +25,11 @@ const displayPlant = async (req, res) => {
       windowDisplay: user.windowDisplay,
     });
   } catch (error) {
-    console.log("Error Putting plant on display", error);
-    res.status(500).json({
-      message: "Couldn't place plant on display. ",
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-const getDisplay = async (req, res) => {
+const getDisplay = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("windowDisplay");
     if (!user) {
@@ -43,11 +39,7 @@ const getDisplay = async (req, res) => {
     }
     res.status(200).json({ windowDisplay: user.windowDisplay });
   } catch (error) {
-    console.log("Error Fetching the display", error);
-    res.status(500).json({
-      message: "Couldn't get the display. ",
-      error: error.message,
-    });
+    next(error);
   }
 };
 

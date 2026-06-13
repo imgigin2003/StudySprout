@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const Plant = require("../models/Plant");
 
-const plantSeed = async (req, res) => {
+const plantSeed = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
     const { name, plantType, growthDuration, xpValue, description } = req.body;
@@ -26,14 +26,11 @@ const plantSeed = async (req, res) => {
       garden: user.garden,
     });
   } catch (error) {
-    console.error("Error Planting the seed. ", error);
-    res
-      .status(500)
-      .json({ message: "Couldn't plant the seed", error: error.message });
+    next(error);
   }
 };
 
-const getGarden = async (req, res) => {
+const getGarden = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).populate("garden.plant");
     if (!user) {
@@ -41,14 +38,11 @@ const getGarden = async (req, res) => {
     }
     res.status(200).json({ garden: user.garden });
   } catch (error) {
-    console.error("Error fetching garden. ", error);
-    res
-      .status(500)
-      .json({ message: "Couldn't fetch the garden", error: error.message });
+    next(error);
   }
 };
 
-const harvestPlant = async (req, res) => {
+const harvestPlant = async (req, res, next) => {
   try {
     const { plotId, isEarlyMastery } = req.body;
     if (!plotId) {
@@ -84,14 +78,11 @@ const harvestPlant = async (req, res) => {
       harvestedPlants: user.harvestedPlants,
     });
   } catch (error) {
-    console.error("Error harvesting the plant. ", error);
-    res
-      .status(500)
-      .json({ message: "Couldn't harvest the plant", error: error.message });
+    next(error);
   }
 };
 
-const updatePlantGrowth = async (req, res) => {
+const updatePlantGrowth = async (req, res, next) => {
   try {
     const { plotId, xpGained } = req.body;
     const user = await User.findById(req.user.id).populate("garden.plant");
@@ -103,10 +94,7 @@ const updatePlantGrowth = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "Growth updated successfully" });
   } catch (error) {
-    console.error("Error Updating the XP. ", error);
-    res
-      .status(500)
-      .json({ message: "Couldn't Update the XP", error: error.message });
+    next(error);
   }
 };
 
