@@ -80,8 +80,14 @@ const harvestPlant = async (req, res, next) => {
 const updatePlantGrowth = async (req, res, next) => {
   try {
     const { plotId, xpGained } = req.body;
+    if (!plotId) {
+      return res.status(400).json({ message: "Invalid Plot id." });
+    }
     const user = await User.findById(req.user.id).populate("garden.plant");
     const plot = user.garden.id(plotId);
+    if (plot == null) {
+      return res.status(404).json({ message: "Plot not found in the garden" });
+    }
     plot.currentXP += xpGained;
     if (plot.currentXP >= plot.plant.xpValue) {
       plot.plantStatus = "ready to harvest";
