@@ -2,15 +2,14 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const newUser = async (req, res) => {
+const newUser = async (req, res, next) => {
   const { email, password, name } = req.body;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).json({ message: "Email already in use" });
-  }
-
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
     const user = await User.create({ email, password, name });
     const userObject = user.toObject();
     delete userObject.password;
@@ -19,14 +18,11 @@ const newUser = async (req, res) => {
       user: userObject,
     });
   } catch (error) {
-    console.error("Error creating user:", error);
-    res
-      .status(500)
-      .json({ message: "Couldn't create user", error: error.message });
+    next(error);
   }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -44,19 +40,15 @@ const loginUser = async (req, res) => {
       res.status(400).json({ message: "Invalid credentials" });
     }
   } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "Login failed ", error: error.message });
+    next(error);
   }
 };
 
-const getUserProfile = async (req, res) => {
+const getUserProfile = async (req, res, next) => {
   try {
     return res.json({ user: req.user });
   } catch (error) {
-    console.error("Error fetching user profile:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch user profile", error: error.message });
+    next(error);
   }
 };
 
