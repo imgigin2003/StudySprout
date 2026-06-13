@@ -12,11 +12,11 @@ const app = express();
 app.use(express.json());
 app.use(express.static("Public"));
 app.use(cors());
-app.use(errorHandler);
 
 app.use("/api/plant", plantRoutes);
 app.use("/api/garden", gardenRoutes);
 app.use("/api/display", displayRoutes);
 app.use("/api/auth", authRoutes);
 
+app.use(errorHandler);
 module.exports = app;
