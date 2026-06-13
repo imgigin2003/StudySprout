@@ -62,11 +62,6 @@ const harvestPlant = async (req, res, next) => {
     if (isEarlyMastery) {
       plot.plant.isMaster = true;
       await plot.plant.save();
-      res.status(200).json({
-        message: "Plant harvested successfully.",
-        totalXP: user.totalXP,
-        harvestedPlants: user.harvestedPlants,
-      });
     }
     user.totalXP += plot.plant.xpValue;
     user.harvestedPlants.push(plot.plant._id);
