@@ -23,5 +23,6 @@ backend/.env
 *.sln
 *.sw?
 backend/.env
+backend/mongoose-types.d.ts
 .env
 
