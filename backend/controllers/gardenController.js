@@ -50,7 +50,7 @@ const harvestPlant = async (req, res, next) => {
     }
     const user = await User.findById(req.user.id).populate("garden.plant");
     const plot = user.garden.id(plotId);
-    if (plot == null) {
+    if (plot === null) {
       return res.status(404).json({ message: "Plot not found in the garden" });
     }
     const plantedTime = new Date(plot.plantedAt).getTime();
@@ -85,7 +85,7 @@ const updatePlantGrowth = async (req, res, next) => {
     }
     const user = await User.findById(req.user.id).populate("garden.plant");
     const plot = user.garden.id(plotId);
-    if (plot == null) {
+    if (plot === null) {
       return res.status(404).json({ message: "Plot not found in the garden" });
     }
     plot.currentXP += xpGained;
