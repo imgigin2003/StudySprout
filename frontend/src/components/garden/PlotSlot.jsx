@@ -27,21 +27,21 @@ export default function PlotSlot({ plant, onPlantClick, onEmptyClick }) {
       className="flex flex-col items-center justify-center w-full aspect-square bg-amber-800/20 border-2 border-border rounded-md hover:bg-amber-800/30 transition-colors p-2"
     >
       <PlantEmoji
-        type={plant.plant_type}
-        stage={plant.growth_stage}
+        type={plant.plant?.plantType}
+        stage={plant.plantStatus}
         size="md"
       />
       <XPBar
-        current={plant.xp}
-        max={plant.xp_to_next}
+        current={plant.currentXP}
+        max={plant.plant?.xpValue}
         size="sm"
         showLabel={false}
       />
       <span className="font-body text-sm text-foreground mt-0.5">
-        {plant.xp} XP
+        {plant.currentXP} XP
       </span>
       <span className="font-heading text-[7px] text-foreground tracking-wide uppercase mt-0.5">
-        {plant.subject}
+        {plant.plant?.name}
       </span>
     </button>
   );

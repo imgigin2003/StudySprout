@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../utils/api";
+import { ChevronLeft } from "lucide-react";
+import PomodoroTimer from "../components/timer/PomodroTimer";
 
 export default function TimerPage() {
   const navigate = useNavigate();
@@ -34,13 +36,12 @@ export default function TimerPage() {
         plotId: plotId,
         timeDuration: minutes,
       });
-      setSessionId(response.data.session._id);
+      setSessionId(response.data.sessionDetail._id);
     } catch (error) {
       console.error("Failed to start session:", error.response?.data?.message);
     }
   };
 
-  // Call this when the timer naturally finishes
   const handleComplete = async () => {
     try {
       await api.post("/pomodoro/complete", { sessionId });
@@ -95,6 +96,7 @@ export default function TimerPage() {
       {/* Timer */}
       <PomodoroTimer
         plant={plant}
+        onStart={handleStart}
         onComplete={handleComplete}
         onCancel={handleStopEarly}
       />

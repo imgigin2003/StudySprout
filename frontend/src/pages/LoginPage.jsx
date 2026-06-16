@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -9,6 +9,7 @@ import GoogleIcon from "../components/GoogleIcon";
 import api from "../utils/api";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,7 +27,9 @@ export default function Login() {
       if (token) {
         localStorage.setItem("token", token);
 
-        window.location.href = "/";
+        localStorage.setItem("token", token);
+        await checkUserAuth();
+        navigate("/garden");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password");

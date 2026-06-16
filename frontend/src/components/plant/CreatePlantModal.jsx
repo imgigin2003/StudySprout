@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const plantTypes = [
-  { value: "sunflower", label: "🌻 Sunflower" },
-  { value: "rose", label: "🌹 Rose" },
-  { value: "cactus", label: "🌵 Cactus" },
-  { value: "tulip", label: "🌷 Tulip" },
-  { value: "fern", label: "☘️ Fern" },
-  { value: "daisy", label: "🌼 Daisy" },
+  { value: "rose", label: "🌹 Rose", requiredStreak: 0 },
+  { value: "cactus", label: "🌵 Cactus", requiredStreak: 0 },
+  { value: "sunflower", label: "🌻 Sunflower", requiredStreak: 7 },
+  { value: "tulip", label: "🌷 Tulip", requiredStreak: 7 },
+  { value: "fern", label: "☘️ Fern", requiredStreak: 14 },
+  { value: "daisy", label: "🌼 Daisy", requiredStreak: 14 },
 ];
 
 export default function CreatePlantModal({
@@ -18,14 +18,18 @@ export default function CreatePlantModal({
   onSubmit,
   rowIndex,
   plotIndex,
+  streakDays = 0,
 }) {
   const [subject, setSubject] = useState("");
-  const [plantType, setPlantType] = useState("sunflower");
+  const [plantType, setPlantType] = useState("rose");
+  const [tooltip, setTooltip] = useState(null);
 
   if (!isOpen) return null;
 
   const handleSubmit = () => {
     if (!subject.trim()) return;
+    const selected = plantTypes.find((p) => p.value === plantType);
+    if (selected && streakDays < selected.requiredStreak) return;
     onSubmit({
       name: subject,
       subject,
@@ -34,7 +38,7 @@ export default function CreatePlantModal({
       plot_index: plotIndex,
     });
     setSubject("");
-    setPlantType("sunflower");
+    setPlantType("rose");
     onClose();
   };
 
@@ -71,19 +75,44 @@ export default function CreatePlantModal({
               🪴 CHOOSE YOUR PLANT
             </label>
             <div className="grid grid-cols-3 gap-2">
-              {plantTypes.map((pt) => (
-                <button
-                  key={pt.value}
-                  onClick={() => setPlantType(pt.value)}
-                  className={`p-2 rounded-md border-2 text-center font-body text-sm transition-all ${
-                    plantType === pt.value
-                      ? "border-primary bg-primary/10"
-                      : "border-border bg-background hover:border-primary/50"
-                  }`}
-                >
-                  {pt.label}
-                </button>
-              ))}
+              {plantTypes.map((pt) => {
+                const locked = streakDays < pt.requiredStreak;
+                const isSelected = plantType === pt.value;
+                return (
+                  <div key={pt.value} className="relative">
+                    <button
+                      onClick={() => {
+                        if (locked) {
+                          setTooltip(tooltip === pt.value ? null : pt.value);
+                        } else {
+                          setPlantType(pt.value);
+                          setTooltip(null);
+                        }
+                      }}
+                      className={`w-full p-2 rounded-md border-2 text-center font-body text-sm transition-all ${
+                        locked
+                          ? "border-border bg-muted opacity-50 cursor-not-allowed"
+                          : isSelected
+                            ? "border-primary bg-primary/10"
+                            : "border-border bg-background hover:border-primary/50"
+                      }`}
+                    >
+                      {locked && (
+                        <span className="absolute top-1 right-1 text-[10px]">
+                          🔒
+                        </span>
+                      )}
+                      {pt.label}
+                    </button>
+                    {locked && tooltip === pt.value && (
+                      <div className="absolute z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 w-36 bg-foreground text-background font-heading text-[7px] text-center px-2 py-1.5 rounded-md shadow-lg">
+                        🔥 REACH {pt.requiredStreak} DAY STREAK TO UNLOCK
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-foreground" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
