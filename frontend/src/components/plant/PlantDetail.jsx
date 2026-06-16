@@ -26,7 +26,7 @@ export default function PlantDetail({
       <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-heading text-xs text-foreground uppercase">
-            {plant.subject}
+            {plant.plant?.name}
           </h2>
           <button
             onClick={onClose}
@@ -38,31 +38,38 @@ export default function PlantDetail({
 
         <div className="flex flex-col items-center gap-3">
           <PlantEmoji
-            type={plant.plant_type}
-            stage={plant.growth_stage}
+            type={plant.plant?.plantType}
+            stage={plant.plantStatus}
             size="xl"
           />
           <div className="bg-secondary px-3 py-1 rounded-md border border-border">
             <span className="font-heading text-[8px] text-foreground">
-              {plant.plant_type.toUpperCase()} ·{" "}
-              {stageLabels[plant.growth_stage]?.toUpperCase()}
+              {plant.plant?.plantType?.toUpperCase()} ·{" "}
+              {plant.plantStatus?.toUpperCase()}
             </span>
           </div>
           <div className="w-full">
-            <XPBar current={plant.xp} max={plant.xp_to_next} size="md" />
+            <XPBar
+              current={plant.currentXP}
+              max={plant.plant?.xpValue}
+              size="md"
+            />
           </div>
         </div>
 
         <div className="flex gap-2 mt-5">
           <Button
-            onClick={() => onStudy(plant)}
+            onClick={() => {
+              onClose();
+              onStudy(plant);
+            }}
             className="flex-1 font-heading text-[8px] tracking-wider h-10"
           >
             <Play size={14} className="mr-1" /> STUDY NOW
           </Button>
           <Button
             variant="destructive"
-            onClick={() => onDelete(plant.id)}
+            onClick={() => onDelete(plant._id)}
             className="font-heading text-[8px] tracking-wider h-10 px-3"
           >
             <Trash2 size={14} />

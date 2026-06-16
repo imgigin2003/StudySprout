@@ -43,8 +43,10 @@ export default function GardenPage() {
 
   const handleCreatePlant = async (data) => {
     try {
-      // data from CreatePlantModal should contain plantId
-      await api.post("/garden/plant", { plantId: data.plantId });
+      await api.post("/garden/plant", {
+        name: data.name,
+        plant_type: data.plant_type,
+      });
       loadData();
     } catch (error) {
       console.error("Failed to plant seed:", error);
@@ -53,8 +55,7 @@ export default function GardenPage() {
 
   const handleDeletePlant = async (id) => {
     try {
-      // In your backend, deleting/removing a plant is done via /garden/harvest
-      await api.post("/garden/harvest", { plotId: id });
+      await api.delete("/garden/delete", { data: { plotId: id } });
       setSelectedPlant(null);
       loadData();
     } catch (error) {
@@ -169,6 +170,7 @@ export default function GardenPage() {
         onSubmit={handleCreatePlant}
         rowIndex={createRow}
         plotIndex={createPlot}
+        streakDays={streak}
       />
       <PlantDetail
         plant={selectedPlant}

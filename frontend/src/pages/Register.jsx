@@ -15,6 +15,7 @@ import GoogleIcon from "../components/GoogleIcon";
 
 export default function Register() {
   const [name, setName] = useState("");
+  const [gardenName, setGardenName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,7 +31,7 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      await api.post("/auth/register", { email, password, name });
+      await api.post("/auth/register", { name, gardenName, email, password });
 
       window.location.href = "/login";
     } catch (err) {
@@ -57,14 +58,14 @@ export default function Register() {
         </>
       }
     >
-      <Button
+      {/* <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
         onClick={handleGoogle}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
         Continue with Google
-      </Button>
+      </Button> */}
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
@@ -82,6 +83,33 @@ export default function Register() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Full Name</Label>
+          <div className="relative">
+            <Input
+              id="name"
+              type="text"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="pl-10 h-12"
+              required
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="gardenName">Garden Name</Label>
+          <div className="relative">
+            <Input
+              id="gardenName"
+              type="text"
+              placeholder="My Secret Garden"
+              value={gardenName}
+              onChange={(e) => setGardenName(e.target.value)}
+              className="pl-10 h-12"
+            />
+          </div>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <div className="relative">

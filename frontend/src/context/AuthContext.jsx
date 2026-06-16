@@ -8,25 +8,37 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [authChecked, setAuthChecked] = useState(false); // Add this state
+  const [authError, setAuthError] = useState(null); // Add this state
+
+  const checkUserAuth = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsLoadingAuth(false);
+      setAuthChecked(true);
+      return;
+    }
+    try {
+      setIsLoadingAuth(true);
+      const response = await api.get("/auth/profile");
+      setUser(response.data.user);
+      setIsAuthenticated(true);
+      setAuthError(null);
+    } catch (error) {
+      localStorage.removeItem("token");
+      setIsAuthenticated(false);
+      // Map common errors
+      if (error.response?.status === 401) {
+        setAuthError({ type: "unauthorized", message: "Session expired" });
+      }
+    } finally {
+      setIsLoadingAuth(false);
+      setAuthChecked(true);
+    }
+  };
 
   useEffect(() => {
-    const checkUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setIsLoadingAuth(false);
-        return;
-      }
-      try {
-        const response = await api.get("/auth/profile");
-        setUser(response.data.user);
-        setIsAuthenticated(true);
-      } catch (error) {
-        localStorage.removeItem("token");
-      } finally {
-        setIsLoadingAuth(false);
-      }
-    };
-    checkUser();
+    checkUserAuth();
   }, []);
 
   const logout = () => {
@@ -38,7 +50,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, isLoadingAuth, logout }}
+      value={{
+        user,
+        isAuthenticated,
+        isLoadingAuth,
+        authChecked, // Export this
+        authError, // Export this
+        checkUserAuth, // Export this
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

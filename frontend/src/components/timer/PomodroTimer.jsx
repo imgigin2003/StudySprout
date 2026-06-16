@@ -3,7 +3,12 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Pause, Play, Check, X, Settings } from "lucide-react";
 import PlantEmoji from "../../components/garden/PlantEmoji";
 
-export default function PomodoroTimer({ plant, onComplete, onCancel }) {
+export default function PomodoroTimer({
+  plant,
+  onStart,
+  onComplete,
+  onCancel,
+}) {
   const [focusMinutes, setFocusMinutes] = useState(25);
   const [shortBreak, setShortBreak] = useState(5);
   const [longBreak, setLongBreak] = useState(15);
@@ -17,10 +22,12 @@ export default function PomodoroTimer({ plant, onComplete, onCancel }) {
     ? (session % 4 === 0 ? longBreak : shortBreak) * 60
     : focusMinutes * 60;
   const progress = ((totalTime - timeLeft) / totalTime) * 100;
+  const isLocked = !plant;
 
   const startTimer = useCallback(() => {
     setIsRunning(true);
-  }, []);
+    if (onStart) onStart(focusMinutes);
+  }, [onStart, focusMinutes]);
 
   const pauseTimer = useCallback(() => {
     setIsRunning(false);
@@ -97,7 +104,7 @@ export default function PomodoroTimer({ plant, onComplete, onCancel }) {
       {/* Subject Header */}
       <div className="text-center">
         <p className="font-body text-lg text-muted-foreground flex items-center justify-center gap-1">
-          🌱 STUDYING: 🌱
+          STUDYING
         </p>
         <h1 className="font-heading text-lg text-foreground mt-1 uppercase leading-relaxed">
           {plant?.subject || "Free Study"}
@@ -105,7 +112,8 @@ export default function PomodoroTimer({ plant, onComplete, onCancel }) {
         {plant && (
           <div className="mt-2 bg-secondary px-3 py-1 rounded-md border border-border inline-block">
             <span className="font-heading text-[7px] text-foreground">
-              🌿 PLOT {plant.plot_index + 1} · {plant.plant_type?.toUpperCase()}
+              🌿 {plant.plant?.name?.toUpperCase()} ·{" "}
+              {plant.plant?.plantType?.toUpperCase()}
             </span>
           </div>
         )}
@@ -160,7 +168,8 @@ export default function PomodoroTimer({ plant, onComplete, onCancel }) {
       <div className="flex items-center gap-3">
         <button
           onClick={isRunning ? pauseTimer : startTimer}
-          className="w-16 h-16 bg-secondary border-2 border-border rounded-lg flex items-center justify-center hover:bg-secondary/80 transition-colors"
+          disabled={isLocked}
+          className={`w-16 h-16 bg-secondary border-2 border-border rounded-lg flex items-center justify-center transition-colors ${isLocked ? "opacity-30 cursor-not-allowed" : "hover:bg-secondary/80"}`}
         >
           {isRunning ? (
             <Pause size={28} className="text-primary" />
@@ -170,22 +179,30 @@ export default function PomodoroTimer({ plant, onComplete, onCancel }) {
         </button>
         <button
           onClick={handleComplete}
-          className="w-16 h-16 bg-secondary border-2 border-border rounded-lg flex items-center justify-center hover:bg-secondary/80 transition-colors"
+          disabled={isLocked}
+          className={`w-16 h-16 bg-secondary border-2 border-border rounded-lg flex items-center justify-center transition-colors ${isLocked ? "opacity-30 cursor-not-allowed" : "hover:bg-secondary/80"}`}
         >
           <Check size={28} className="text-chart-1" />
         </button>
         <button
           onClick={onCancel}
-          className="w-16 h-16 bg-destructive/10 border-2 border-destructive/30 rounded-lg flex items-center justify-center hover:bg-destructive/20 transition-colors"
+          disabled={isLocked}
+          className={`w-16 h-16 bg-destructive/10 border-2 border-destructive/30 rounded-lg flex items-center justify-center transition-colors ${isLocked ? "opacity-30 cursor-not-allowed" : "hover:bg-destructive/20"}`}
         >
           <X size={28} className="text-destructive" />
         </button>
       </div>
+
       <div className="flex gap-8 font-heading text-[7px] text-muted-foreground -mt-1">
         <span>{isRunning ? "PAUSE" : "START"}</span>
         <span>COMPLETE</span>
         <span>CANCEL</span>
       </div>
+      {isLocked && (
+        <p className="font-heading text-[8px] text-muted-foreground text-center">
+          🌱 SELECT A PLANT FROM YOUR GARDEN TO START FOCUSING
+        </p>
+      )}
 
       {/* Streak bonus */}
       <div className="w-full bg-secondary border border-border rounded-md px-3 py-2 text-center">

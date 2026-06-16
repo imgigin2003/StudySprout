@@ -39,6 +39,7 @@ const achievements = [
 
 export default function ShelfPage() {
   const [plants, setPlants] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -62,6 +63,11 @@ export default function ShelfPage() {
       console.error("Failed to add to shelf:", error.response?.data?.message);
     }
   };
+
+  const mastered = plants.filter((p) => p.mastered);
+  const totalFocusHours = Math.round((stats?.total_focus_minutes || 0) / 60);
+  const totalXP =
+    stats?.total_xp || plants.reduce((s, p) => s + (p.xp || 0), 0);
 
   if (loading) {
     return (
