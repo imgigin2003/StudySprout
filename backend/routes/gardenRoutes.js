@@ -5,12 +5,14 @@ const {
   plantSeed,
   getGarden,
   harvestPlant,
+  removePlant,
   updatePlantGrowth,
 } = require("../controllers/gardenController");
 
 router.get("/", middleware.protect, getGarden);
 router.post("/plant", middleware.protect, plantSeed);
 router.post("/harvest", middleware.protect, harvestPlant);
+router.delete("/delete", middleware.protect, removePlant);
 router.patch("/grow", middleware.protect, updatePlantGrowth);
 
 module.exports = router;
