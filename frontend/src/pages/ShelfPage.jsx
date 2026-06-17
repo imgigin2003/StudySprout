@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Sprout, Clock, Flame, Droplets, Trophy, Lock } from "lucide-react";
+import { Sprout, Clock, Flame, Droplets, Lock } from "lucide-react";
 import api from "../utils/api";
 import PlantEmoji from "../components/garden/PlantEmoji";
+import HarvestedPlantDetail from "../components/plant/HarvestedPlantDetail";
 
 const achievements = [
   {
@@ -20,7 +21,7 @@ const achievements = [
     icon: "🔥",
     bgColor: "bg-destructive/10",
     borderColor: "border-destructive/30",
-    check: (stats) => (stats?.day_streak || 0) >= 7,
+    check: (stats) => (stats?.streakDays || 0) >= 7,
   },
   {
     id: "green_thumb",
@@ -29,9 +30,9 @@ const achievements = [
     icon: "🏆",
     bgColor: "bg-muted",
     borderColor: "border-border",
-    check: (stats, plants) => plants.filter((p) => p.mastered).length >= 5,
+    check: (stats, plants) => plants.filter((p) => p.isMaster).length >= 5,
     progress: (stats, plants) => ({
-      current: plants.filter((p) => p.mastered).length,
+      current: plants.filter((p) => p.isMaster).length,
       total: 5,
     }),
   },
@@ -41,33 +42,35 @@ export default function ShelfPage() {
   const [plants, setPlants] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedPlant, setSelectedPlant] = useState(null);
 
-  useEffect(() => {
-    const loadShelf = async () => {
-      try {
-        const response = await api.get("/display");
-        setPlants(response.data.windowDisplay || []);
-      } catch (error) {
-        console.error("Failed to load shelf:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadShelf();
-  }, []);
-
-  const handleAddToShelf = async (plantId) => {
+  const loadShelf = async () => {
     try {
-      await api.post("/display", { plantId });
+      const response = await api.get("/plant/harvested");
+      setPlants(response.data.harvestedPlants || []);
+      setStats(response.data.stats);
     } catch (error) {
-      console.error("Failed to add to shelf:", error.response?.data?.message);
+      console.error("Failed to load shelf:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const mastered = plants.filter((p) => p.mastered);
-  const totalFocusHours = Math.round((stats?.total_focus_minutes || 0) / 60);
-  const totalXP =
-    stats?.total_xp || plants.reduce((s, p) => s + (p.xp || 0), 0);
+  useEffect(() => {
+    loadShelf();
+  }, []);
+
+  const handleDelete = async (plantId) => {
+    try {
+      await api.delete("/plant/harvested", { data: { plantId } });
+      loadShelf();
+    } catch (error) {
+      console.error("Failed to delete plant:", error);
+    }
+  };
+
+  const mastered = plants.filter((p) => p.isMaster);
+  const totalFocusHours = Math.round((stats?.totalFocusMinutes || 0) / 60);
 
   if (loading) {
     return (
@@ -77,7 +80,6 @@ export default function ShelfPage() {
     );
   }
 
-  const shelfSlots = 6;
   const shelfRows = [
     { start: 0, end: 3 },
     { start: 3, end: 6 },
@@ -95,9 +97,8 @@ export default function ShelfPage() {
         </p>
       </div>
 
-      {/* Shelf Display */}
+      {/* Shelf Display — mastered only */}
       <div className="bg-card border-2 border-border rounded-lg p-4 mb-5">
-        {/* Window decoration */}
         <div className="flex justify-center mb-4 text-3xl">🪟</div>
 
         {shelfRows.map((row, rowIdx) => (
@@ -107,29 +108,33 @@ export default function ShelfPage() {
                 const idx = row.start + i;
                 const plant = mastered[idx];
                 return (
-                  <div
+                  <button
                     key={idx}
-                    className={`flex flex-col items-center p-3 rounded-md border-2 ${
+                    onClick={() => plant && setSelectedPlant(plant)}
+                    className={`flex flex-col items-center p-3 rounded-md border-2 transition-colors ${
                       plant
-                        ? "bg-secondary border-border"
-                        : "bg-muted/50 border-dashed border-border"
+                        ? "bg-secondary border-border hover:bg-secondary/80 cursor-pointer"
+                        : "bg-muted/50 border-dashed border-border cursor-default"
                     }`}
                   >
                     {plant ? (
                       <>
                         <PlantEmoji
-                          type={plant.plant_type}
+                          type={plant.plantType}
                           stage="mastered"
                           size="md"
                         />
                         <span className="font-heading text-[7px] text-foreground mt-1 uppercase">
-                          {plant.plant_type}
+                          {plant.plantType}
                         </span>
-                        <span className="font-heading text-[6px] text-muted-foreground">
-                          MASTERED
+                        <span className="font-heading text-[6px] text-muted-foreground truncate w-full text-center">
+                          {plant.name}
+                        </span>
+                        <span className="font-heading text-[6px] text-chart-1">
+                          MASTERED ✅
                         </span>
                         <span className="font-body text-xs text-primary mt-0.5">
-                          💚 {plant.xp} XP
+                          💚 {plant.xpValue} XP
                         </span>
                       </>
                     ) : (
@@ -142,19 +147,66 @@ export default function ShelfPage() {
                           EMPTY SLOT
                         </span>
                         <span className="font-body text-xs text-muted-foreground">
-                          UNLOCK MORE!
+                          HARVEST MORE!
                         </span>
                       </>
                     )}
-                  </div>
+                  </button>
                 );
               })}
             </div>
-            {/* Shelf line */}
             <div className="h-2 bg-amber-700/30 rounded-sm mb-4" />
           </div>
         ))}
       </div>
+
+      {/* All harvested plants list */}
+      {plants.length > 0 && (
+        <div className="mb-5">
+          <p className="font-heading text-[9px] text-foreground mb-3">
+            🌿 ALL HARVESTED PLANTS
+          </p>
+          <div className="flex flex-col gap-2">
+            {plants.map((plant) => (
+              <button
+                key={plant._id}
+                onClick={() => setSelectedPlant(plant)}
+                className="flex items-center gap-3 bg-secondary border border-border rounded-md px-3 py-2 hover:bg-secondary/80 transition-colors text-left w-full"
+              >
+                <PlantEmoji
+                  type={plant.plantType}
+                  stage={plant.isMaster ? "mastered" : "bloom"}
+                  size="sm"
+                />
+                <div className="flex-1">
+                  <p className="font-heading text-[8px] text-foreground uppercase">
+                    {plant.name}
+                  </p>
+                  <p className="font-body text-xs text-muted-foreground">
+                    {plant.plantType} · {plant.xpValue} XP ·{" "}
+                    {plant.growthDuration} min
+                  </p>
+                </div>
+                {plant.isMaster && (
+                  <span className="font-heading text-[6px] text-chart-1">
+                    🏆 MASTERED
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {plants.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          <div className="text-4xl mb-2">🌱</div>
+          <p className="font-heading text-[8px]">NO HARVESTED PLANTS YET</p>
+          <p className="font-body text-xs mt-1">
+            Grow and harvest plants in your garden!
+          </p>
+        </div>
+      )}
 
       {/* Achievements */}
       <div className="mb-5">
@@ -219,15 +271,23 @@ export default function ShelfPage() {
         />
         <StatBox
           icon={<Flame size={18} className="text-destructive" />}
-          value={stats?.day_streak || 0}
+          value={stats?.streakDays || 0}
           label="DAY STREAK"
         />
         <StatBox
           icon={<Droplets size={18} className="text-chart-2" />}
-          value={`${stats?.focus_rate || 0}%`}
-          label="FOCUS RATE"
+          value={`${stats?.totalXP || 0} XP`}
+          label="TOTAL XP"
         />
       </div>
+
+      {/* Detail modal */}
+      <HarvestedPlantDetail
+        plant={selectedPlant}
+        isOpen={!!selectedPlant}
+        onClose={() => setSelectedPlant(null)}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }
