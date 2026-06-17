@@ -7,9 +7,11 @@ import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "../components/AuthLayout";
 import GoogleIcon from "../components/GoogleIcon";
 import api from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { checkUserAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,8 +27,6 @@ export default function Login() {
       const { token } = response.data;
 
       if (token) {
-        localStorage.setItem("token", token);
-
         localStorage.setItem("token", token);
         await checkUserAuth();
         navigate("/garden");
