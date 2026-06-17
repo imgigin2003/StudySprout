@@ -5,7 +5,8 @@ const plantSeed = async (req, res, next) => {
   try {
     console.log("req.body:", req.body);
     const user = await User.findById(req.user.id);
-    const { name, plant_type, growthDuration, xpValue, description } = req.body;
+    const { name, plant_type, growthDuration, xpValue, description, isMaster } =
+      req.body;
     const plantType = plant_type;
     const starterPlants = ["cactus", "rose"];
     if (user.streakDays < 7 && !starterPlants.includes(plantType)) {
@@ -19,6 +20,7 @@ const plantSeed = async (req, res, next) => {
       growthDuration: growthDuration || 30,
       xpValue: xpValue || 100,
       description: description || "",
+      isMaster: isMaster || false,
     });
     user.garden.push({ plant: newPlant._id });
     await user.save();
@@ -50,21 +52,23 @@ const getGarden = async (req, res, next) => {
 const harvestPlant = async (req, res, next) => {
   try {
     const { plotId, isEarlyMastery } = req.body;
-    if (!plotId) {
-      return res.status(400).json({ message: "Invalid Plot id." });
-    }
+    if (!plotId) return res.status(400).json({ message: "Invalid Plot id." });
 
     const user = await User.findById(req.user.id).populate("garden.plant");
     const plot = user.garden.id(plotId);
-    if (plot === null) {
+    if (!plot)
       return res.status(404).json({ message: "Plot not found in the garden" });
-    }
 
-    const plantedTime = new Date(plot.plantedAt).getTime();
-    // The plant is ready if Date.now() is greater than or equal to plantedTime + growthTime.
-    const growthTime = plot.plant.growthDuration * 60 * 1000;
-    if (Date.now() < plantedTime + growthTime && !isEarlyMastery) {
-      return res.status(400).json({ message: "The Plant hasn't bloomed yet!" });
+    const alreadyReady = plot.plantStatus === "ready to harvest";
+
+    if (!alreadyReady && !isEarlyMastery) {
+      const plantedTime = new Date(plot.plantedAt).getTime();
+      const growthTime = plot.plant.growthDuration * 60 * 1000;
+      if (Date.now() < plantedTime + growthTime) {
+        return res
+          .status(400)
+          .json({ message: "The Plant hasn't bloomed yet!" });
+      }
     }
 
     if (isEarlyMastery) {
