@@ -46,6 +46,10 @@ export default function GardenPage() {
       await api.post("/garden/plant", {
         name: data.name,
         plant_type: data.plant_type,
+        xpValue: data.xpValue,
+        growthDuration: data.growthDuration,
+        description: data.description,
+        isMaster: data.isMaster,
       });
       loadData();
     } catch (error) {
@@ -66,6 +70,16 @@ export default function GardenPage() {
   const handleStudy = (plant) => {
     // plant._id is the plot ID in your garden array
     navigate(`/timer?plotId=${plant._id}`);
+  };
+
+  const handleHarvestPlant = async (id) => {
+    try {
+      await api.post("/garden/harvest", { plotId: id });
+      setSelectedPlant(null);
+      loadData();
+    } catch (error) {
+      console.error("Failed to harvest plant:", error);
+    }
   };
 
   const handleEmptyClick = (row, plot) => {
@@ -178,6 +192,7 @@ export default function GardenPage() {
         onClose={() => setSelectedPlant(null)}
         onStudy={handleStudy}
         onDelete={handleDeletePlant}
+        onHarvest={handleHarvestPlant}
       />
     </div>
   );
