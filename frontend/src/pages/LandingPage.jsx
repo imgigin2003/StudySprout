@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Sprout, LogIn, Volume2, VolumeX } from "lucide-react";
-import Typewriter from "../components/Typewriter";
+import Typewriter from "../components/TypeWriter";
 import { useMusic } from "../components/MusicProvider";
+import SoundLink from "../components/SoundLink";
 
 export default function LandingPage() {
   const { isPlaying, toggle } = useMusic();
@@ -10,9 +10,6 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Decorative elements */}
-      <div className="absolute top-6 right-8">
-        <div className="w-12 h-10 bg-accent rounded-sm" />
-      </div>
       <div className="absolute top-10 left-6 text-primary-foreground/30 text-xl">
         ✦
       </div>
@@ -42,7 +39,7 @@ export default function LandingPage() {
           <p className="font-heading text-[9px] text-primary mt-2 tracking-wide min-h-[1.2em]">
             <Typewriter
               text="WELCOME TO STUDYSPROUT"
-              speed={50}
+              speed={120}
               startDelay={400}
             />
           </p>
@@ -67,24 +64,16 @@ export default function LandingPage() {
 
         {/* Buttons */}
         <div className="w-full space-y-3 max-w-xs">
-          <Link
+          <SoundLink
             to="/login"
             className="w-full flex items-center justify-center gap-2 bg-card border-2 border-border rounded-md py-3 px-4 hover:bg-secondary transition-colors"
           >
             <LogIn size={16} className="text-foreground" />
+            <Sprout size={16} className="text-foreground" />
             <span className="font-heading text-[9px] text-foreground tracking-wider">
               SIGN IN / LOGIN
             </span>
-          </Link>
-          <Link
-            to="/garden"
-            className="w-full flex items-center justify-center gap-2 bg-card border-2 border-border rounded-md py-3 px-4 hover:bg-secondary transition-colors"
-          >
-            <Sprout size={16} className="text-foreground" />
-            <span className="font-heading text-[9px] text-foreground tracking-wider">
-              CONTINUE AS GUEST
-            </span>
-          </Link>
+          </SoundLink>
         </div>
 
         {/* Footer tag */}
@@ -95,31 +84,6 @@ export default function LandingPage() {
           </span>
           <span className="text-sm">🌿</span>
         </div>
-      </div>
-
-      {/* Bottom nav placeholder */}
-      <div className="h-16 bg-primary border-t-2 border-border flex items-center justify-around max-w-lg mx-auto w-full">
-        <Link
-          to="/garden"
-          className="flex flex-col items-center gap-1 text-primary-foreground/70"
-        >
-          <Sprout size={18} />
-          <span className="font-heading text-[6px]">MY GARDEN</span>
-        </Link>
-        <Link
-          to="/timer"
-          className="flex flex-col items-center gap-1 text-primary-foreground/70"
-        >
-          <span className="text-sm">⏳</span>
-          <span className="font-heading text-[6px]">STUDY TIMER</span>
-        </Link>
-        <Link
-          to="/shelf"
-          className="flex flex-col items-center gap-1 text-primary-foreground/70"
-        >
-          <span className="text-sm">📊</span>
-          <span className="font-heading text-[6px]">MY SHELF</span>
-        </Link>
       </div>
     </div>
   );

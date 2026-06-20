@@ -1,5 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
+// @ts-nocheck
+
+import { useLocation } from "react-router-dom";
 import { Sprout, Timer, BookOpen } from "lucide-react";
+import SoundLink from "@/components/SoundLink";
 
 const navItems = [
   { path: "/garden", label: "MY GARDEN", icon: Sprout },
@@ -17,7 +20,7 @@ export default function Navbar() {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
           return (
-            <Link
+            <SoundLink
               key={item.path}
               to={item.path}
               className={`flex flex-col items-center gap-1 px-4 py-2 rounded-md transition-all ${
@@ -30,7 +33,7 @@ export default function Navbar() {
               <span className="font-heading text-[7px] tracking-wider">
                 {item.label}
               </span>
-            </Link>
+            </SoundLink>
           );
         })}
       </div>

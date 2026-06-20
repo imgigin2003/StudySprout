@@ -4,6 +4,17 @@ import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+const CLICK_SOUND_SRC = "/sounds/button-click.mp3";
+const DEFAULT_CLICK_VOLUME = 0.4;
+
+function playClickSound(volume = DEFAULT_CLICK_VOLUME) {
+  try {
+    const audio = new Audio(CLICK_SOUND_SRC);
+    audio.volume = volume;
+    audio.play().catch(() => {});
+  } catch {}
+}
+
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
@@ -35,12 +46,35 @@ const buttonVariants = cva(
 );
 
 const Button = React.forwardRef(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      onClick,
+      // Set silent to true on any button that shouldn't play the click
+      // sound (e.g. a button that triggers its own distinct sound effect).
+      silent = false,
+      clickVolume,
+      ...props
+    },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : "button";
+
+    const handleClick = (event) => {
+      if (!silent) {
+        playClickSound(clickVolume);
+      }
+      if (onClick) onClick(event);
+    };
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        onClick={handleClick}
         {...props}
       />
     );

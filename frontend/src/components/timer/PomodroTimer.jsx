@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Pause, Play, Check, X, Settings } from "lucide-react";
 import PlantEmoji, { getGrowthStage } from "@/components/garden/PlantEmoji";
+import useSound from "@/hooks/useSound";
 
 const stageLabels = {
   seed: "SEED",
@@ -30,8 +31,11 @@ export default function PomodoroTimer({
   const progress = ((totalTime - timeLeft) / totalTime) * 100;
   const isLocked = !plant;
 
-  // Derive the plant's growth stage live from XP progress, so it updates
-  // as the session progresses (e.g. after a "complete" XP bump from backend)
+  const playSessionComplete = useSound("/sounds/session-complete.mp3", {
+    volume: 0.6,
+  });
+
+  // Derive the plant's growth stage live from XP progress
   const stage = plant
     ? getGrowthStage(
         plant.currentXP,
@@ -57,10 +61,12 @@ export default function PomodoroTimer({
             clearInterval(intervalRef.current);
             if (!isBreak) {
               if (session < 4) {
+                playSessionComplete();
                 setIsBreak(true);
                 setIsRunning(false);
                 return (session % 4 === 0 ? longBreak : shortBreak) * 60;
               } else {
+                playSessionComplete();
                 onComplete(focusMinutes * 4);
                 return 0;
               }
@@ -84,6 +90,7 @@ export default function PomodoroTimer({
     shortBreak,
     longBreak,
     onComplete,
+    playSessionComplete,
   ]);
 
   const mins = Math.floor(timeLeft / 60);
@@ -92,6 +99,7 @@ export default function PomodoroTimer({
   const handleComplete = () => {
     const minutesStudied =
       Math.ceil((totalTime - timeLeft) / 60) + (session - 1) * focusMinutes;
+    playSessionComplete();
     onComplete(Math.max(minutesStudied, 1));
   };
 
