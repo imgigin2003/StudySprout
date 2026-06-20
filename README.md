@@ -111,13 +111,13 @@ npm install
 npm run dev
 ```
 
+> Frontend runs on `http://localhost:5173` — make sure your backend is running on port `3000`.
+
 5. **Start the DB:**
 
 ```bash
 mongod
 ```
-
-> Frontend runs on `http://localhost:5173` — make sure your backend is running on port `3000`.
 
 ---
 
