@@ -1,7 +1,13 @@
 // @ts-nocheck
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Pause, Play, Check, X, Settings } from "lucide-react";
-import PlantEmoji from "../../components/garden/PlantEmoji";
+import PlantEmoji, { getGrowthStage } from "@/components/garden/PlantEmoji";
+
+const stageLabels = {
+  seed: "SEED",
+  sprout: "SPROUT",
+  bloom: "BLOOM",
+};
 
 export default function PomodoroTimer({
   plant,
@@ -23,6 +29,16 @@ export default function PomodoroTimer({
     : focusMinutes * 60;
   const progress = ((totalTime - timeLeft) / totalTime) * 100;
   const isLocked = !plant;
+
+  // Derive the plant's growth stage live from XP progress, so it updates
+  // as the session progresses (e.g. after a "complete" XP bump from backend)
+  const stage = plant
+    ? getGrowthStage(
+        plant.currentXP,
+        plant.plant?.xpValue,
+        plant.plant?.isMaster,
+      )
+    : "seed";
 
   const startTimer = useCallback(() => {
     setIsRunning(true);
@@ -97,8 +113,6 @@ export default function PomodoroTimer({
     }
   };
 
-  const stageLabel = plant ? plant.growth_stage?.toUpperCase() : "SEED";
-
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       {/* Subject Header */}
@@ -107,7 +121,7 @@ export default function PomodoroTimer({
           STUDYING
         </p>
         <h1 className="font-heading text-lg text-foreground mt-1 uppercase leading-relaxed">
-          {plant?.subject || "Free Study"}
+          {plant?.plant?.name || "Free Study"}
         </h1>
         {plant && (
           <div className="mt-2 bg-secondary px-3 py-1 rounded-md border border-border inline-block">
@@ -145,20 +159,14 @@ export default function PomodoroTimer({
         </button>
       </div>
 
-      {/* Plant Visual */}
+      {/* Plant Visual — stage is derived live from XP progress */}
       {plant && (
         <div className="flex flex-col items-center">
-          <div className="relative">
-            <PlantEmoji
-              type={plant.plant_type}
-              stage={plant.growth_stage}
-              size="xl"
-            />
-            <div className="absolute -top-1 -right-1 text-lg">✨</div>
-          </div>
+          <PlantEmoji type={plant.plant?.plantType} stage={stage} size="xl" />
           <div className="mt-2 bg-secondary px-3 py-1 rounded-md border border-border">
             <span className="font-heading text-[7px] text-foreground">
-              🌿 {plant.plant_type?.toUpperCase()} · {stageLabel} STAGE
+              🌿 {plant.plant?.plantType?.toUpperCase()} · {stageLabels[stage]}{" "}
+              STAGE
             </span>
           </div>
         </div>

@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, Sprout, Droplets, Calendar, Flame } from "lucide-react";
+import {
+  ChevronLeft,
+  Sprout,
+  Droplets,
+  Calendar,
+  Flame,
+  VolumeX,
+  Volume2,
+} from "lucide-react";
 import GardenGrid from "../components/garden/GardenGrid";
 import XPBar from "../components/garden/XPBar";
 import CreatePlantModal from "../components/plant/CreatePlantModal";
 import PlantDetail from "../components/plant/PlantDetail";
+import { useMusic } from "@/components/MusicProvider";
 import api from "../utils/api";
 
 export default function GardenPage() {
+  const { isPlaying, toggle } = useMusic();
   const navigate = useNavigate();
   const [plants, setPlants] = useState([]);
   const [stats, setStats] = useState(null);
@@ -72,9 +82,12 @@ export default function GardenPage() {
     navigate(`/timer?plotId=${plant._id}`);
   };
 
-  const handleHarvestPlant = async (id) => {
+  const handleHarvestPlant = async (id, markMastered) => {
     try {
-      await api.post("/garden/harvest", { plotId: id });
+      await api.post("/garden/harvest", {
+        plotId: id,
+        isEarlyMastery: markMastered,
+      });
       setSelectedPlant(null);
       loadData();
     } catch (error) {
@@ -140,6 +153,18 @@ export default function GardenPage() {
           </p>
         </div>
       </div>
+
+      <button
+        onClick={toggle}
+        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
+        aria-label={isPlaying ? "Mute music" : "Play music"}
+      >
+        {isPlaying ? (
+          <Volume2 size={16} className="text-foreground" />
+        ) : (
+          <VolumeX size={16} className="text-muted-foreground" />
+        )}
+      </button>
 
       {/* Garden Grid */}
       <GardenGrid

@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 import { X, Play, Trash2, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import PlantEmoji from "@/components/garden/PlantEmoji";
+import PlantEmoji, {
+  getGrowthStage,
+  getGrowthProgress,
+} from "@/components/garden/PlantEmoji";
 import XPBar from "@/components/garden/XPBar";
+
+const stageLabels = {
+  seed: "SEED",
+  sprout: "SPROUT",
+  bloom: "BLOOM",
+};
 
 export default function PlantDetail({
   plant,
@@ -18,6 +27,14 @@ export default function PlantDetail({
   if (!isOpen || !plant) return null;
 
   const isReadyToHarvest = plant?.plantStatus === "ready to harvest";
+  const stage = getGrowthStage(
+    plant.currentXP,
+    plant.plant?.xpValue,
+    plant.plant?.isMaster,
+  );
+  const progressPct = Math.round(
+    getGrowthProgress(plant.currentXP, plant.plant?.xpValue) * 100,
+  );
 
   const handleHarvestConfirm = () => {
     onHarvest(plant._id, markMastered);
@@ -29,7 +46,6 @@ export default function PlantDetail({
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
         <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5">
-          {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-heading text-xs text-foreground uppercase">
               {plant.plant?.name}
@@ -42,17 +58,12 @@ export default function PlantDetail({
             </button>
           </div>
 
-          {/* Plant visual */}
           <div className="flex flex-col items-center gap-3">
-            <PlantEmoji
-              type={plant.plant?.plantType}
-              stage={plant.plantStatus}
-              size="xl"
-            />
+            <PlantEmoji type={plant.plant?.plantType} stage={stage} size="xl" />
             <div className="bg-secondary px-3 py-1 rounded-md border border-border">
               <span className="font-heading text-[8px] text-foreground">
-                {plant.plant?.plantType?.toUpperCase()} ·{" "}
-                {plant.plantStatus?.toUpperCase()}
+                {plant.plant?.plantType?.toUpperCase()} · {stageLabels[stage]} ·{" "}
+                {progressPct}%
               </span>
             </div>
             <div className="w-full">
@@ -66,7 +77,6 @@ export default function PlantDetail({
               </p>
             </div>
 
-            {/* Description if exists */}
             {plant.plant?.description && (
               <div className="w-full bg-secondary border border-border rounded-md px-3 py-2">
                 <p className="font-heading text-[7px] text-muted-foreground mb-1">
@@ -79,7 +89,6 @@ export default function PlantDetail({
             )}
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-2 mt-5">
             {isReadyToHarvest ? (
               <Button
@@ -110,7 +119,6 @@ export default function PlantDetail({
         </div>
       </div>
 
-      {/* Harvest confirmation popup */}
       {confirmHarvest && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/40 p-4">
           <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5">
@@ -127,7 +135,6 @@ export default function PlantDetail({
                 . Did you fully master this topic?
               </p>
 
-              {/* Mastery checkbox */}
               <div className="w-full flex items-center gap-3 bg-secondary border border-border rounded-md px-3 py-2">
                 <input
                   type="checkbox"

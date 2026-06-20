@@ -23,7 +23,6 @@ export default function HarvestedPlantDetail({
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
         <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5">
-          {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-heading text-xs text-foreground uppercase flex items-center gap-2">
               {plant.isMaster && (
@@ -39,15 +38,15 @@ export default function HarvestedPlantDetail({
             </button>
           </div>
 
-          {/* Plant visual */}
+          {/* Plant visual — harvested plants are always fully bloomed */}
           <div className="flex flex-col items-center gap-3">
             <PlantEmoji
               type={plant.plantType}
-              stage={plant.isMaster ? "mastered" : "bloom"}
+              stage="bloom"
               size="xl"
+              animate={false}
             />
 
-            {/* Status badge */}
             <div
               className={`px-3 py-1 rounded-md border ${plant.isMaster ? "bg-yellow-500/10 border-yellow-500/30" : "bg-secondary border-border"}`}
             >
@@ -58,7 +57,6 @@ export default function HarvestedPlantDetail({
             </div>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-2 gap-2 mt-4">
             <div className="bg-secondary border border-border rounded-md px-3 py-2 text-center">
               <p className="font-heading text-[7px] text-muted-foreground mb-1">
@@ -78,7 +76,6 @@ export default function HarvestedPlantDetail({
             </div>
           </div>
 
-          {/* Description / Goals */}
           {plant.description ? (
             <div className="mt-3 bg-secondary border border-border rounded-md px-3 py-2">
               <p className="font-heading text-[7px] text-muted-foreground mb-1">
@@ -96,7 +93,6 @@ export default function HarvestedPlantDetail({
             </div>
           )}
 
-          {/* Delete button */}
           <Button
             variant="destructive"
             onClick={() => setConfirmDelete(true)}
@@ -107,7 +103,6 @@ export default function HarvestedPlantDetail({
         </div>
       </div>
 
-      {/* Delete confirmation */}
       {confirmDelete && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/40 p-4">
           <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5">
