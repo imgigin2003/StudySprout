@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import PageNotFound from "./lib/PageNotFound";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { MusicProvider } from "./components/MusicProvider";
 import ScrollToTop from "./components/ScrollToTop";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/LoginPage";
@@ -77,10 +78,12 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <ScrollToTop />
-          <AuthenticatedApp />
-        </Router>
+        <MusicProvider src="/sounds/bgm.m4a" volume={0.15} loop>
+          <Router>
+            <ScrollToTop />
+            <AuthenticatedApp />
+          </Router>
+        </MusicProvider>
       </QueryClientProvider>
     </AuthProvider>
   );

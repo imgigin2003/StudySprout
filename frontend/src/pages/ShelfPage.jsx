@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Sprout, Clock, Flame, Droplets, Lock } from "lucide-react";
+import {
+  Sprout,
+  Clock,
+  Flame,
+  Droplets,
+  Lock,
+  VolumeX,
+  Volume2,
+} from "lucide-react";
 import api from "../utils/api";
-import PlantEmoji from "../components/garden/PlantEmoji";
+import PlantEmoji from "@/components/garden/PlantEmoji";
 import HarvestedPlantDetail from "../components/plant/HarvestedPlantDetail";
+import { useMusic } from "@/components/MusicProvider";
 
 const achievements = [
   {
@@ -39,6 +48,7 @@ const achievements = [
 ];
 
 export default function ShelfPage() {
+  const { isPlaying, toggle } = useMusic();
   const [plants, setPlants] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -96,6 +106,17 @@ export default function ShelfPage() {
           MASTERED PLANTS · {mastered.length} OF {plants.length}
         </p>
       </div>
+      <button
+        onClick={toggle}
+        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
+        aria-label={isPlaying ? "Mute music" : "Play music"}
+      >
+        {isPlaying ? (
+          <Volume2 size={16} className="text-foreground" />
+        ) : (
+          <VolumeX size={16} className="text-muted-foreground" />
+        )}
+      </button>
 
       {/* Shelf Display — mastered only */}
       <div className="bg-card border-2 border-border rounded-lg p-4 mb-5">
@@ -121,7 +142,8 @@ export default function ShelfPage() {
                       <>
                         <PlantEmoji
                           type={plant.plantType}
-                          stage="mastered"
+                          stage="bloom"
+                          animate={false}
                           size="md"
                         />
                         <span className="font-heading text-[7px] text-foreground mt-1 uppercase">
@@ -175,7 +197,8 @@ export default function ShelfPage() {
               >
                 <PlantEmoji
                   type={plant.plantType}
-                  stage={plant.isMaster ? "mastered" : "bloom"}
+                  stage="bloom"
+                  animate={false}
                   size="sm"
                 />
                 <div className="flex-1">

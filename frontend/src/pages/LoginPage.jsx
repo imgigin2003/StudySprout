@@ -3,15 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
+import { LogIn, Mail, Lock, Loader2, Volume2, VolumeX } from "lucide-react";
 import AuthLayout from "../components/AuthLayout";
 import GoogleIcon from "../components/GoogleIcon";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
+import { useMusic } from "../components/MusicProvider";
 
 export default function Login() {
   const navigate = useNavigate();
   const { checkUserAuth } = useAuth();
+  const { isPlaying, toggle } = useMusic();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +26,6 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await api.post("/auth/login", { email, password });
-
       const { token } = response.data;
 
       if (token) {
@@ -61,6 +63,19 @@ export default function Login() {
         </>
       }
     >
+      {/* Music toggle */}
+      <button
+        onClick={toggle}
+        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
+        aria-label={isPlaying ? "Mute music" : "Play music"}
+      >
+        {isPlaying ? (
+          <Volume2 size={16} className="text-foreground" />
+        ) : (
+          <VolumeX size={16} className="text-muted-foreground" />
+        )}
+      </button>
+
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"

@@ -3,11 +3,14 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../utils/api";
 import { ChevronLeft } from "lucide-react";
 import PomodoroTimer from "../components/timer/PomodroTimer";
+import { useMusic } from "@/components/MusicProvider";
+import { VolumeX, Volume2 } from "lucide-react";
 
 export default function TimerPage() {
+  const { isPlaying, toggle } = useMusic();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const plotId = searchParams.get("plotId"); // Your backend uses the plotId in the garden
+  const plotId = searchParams.get("plotId");
 
   const [plant, setPlant] = useState(null);
   const [sessionId, setSessionId] = useState(null);
@@ -92,6 +95,17 @@ export default function TimerPage() {
         </div>
         <div className="w-16" />
       </div>
+      <button
+        onClick={toggle}
+        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
+        aria-label={isPlaying ? "Mute music" : "Play music"}
+      >
+        {isPlaying ? (
+          <Volume2 size={16} className="text-foreground" />
+        ) : (
+          <VolumeX size={16} className="text-muted-foreground" />
+        )}
+      </button>
 
       {/* Timer */}
       <PomodoroTimer
