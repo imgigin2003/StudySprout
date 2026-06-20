@@ -4,48 +4,66 @@ import { useState } from "react";
 const CLICK_SOUND_SRC = "/sounds/typewriter-click.mp3";
 
 /**
- * Typewriter — types out `text` one letter at a time (with a click sound
- * per letter), pauses, erases, pauses, then retypes — forever.
+ * Typewriter — types out `text` one letter at a time, pauses, erases,
+ * pauses, then retypes — forever. A single typing-sound clip plays once
+ * per typing pass, starting right as typing begins.
  *
  * Usage:
  *   <Typewriter text="Welcome to StudySprout" speed={45} />
  */
 export default function Typewriter({
   text,
-  speed = 5,
-  eraseSpeed = 20,
-  startDelay = 400,
+  speed = 45,
+  eraseSpeed = 25,
+  startDelay = 300,
   pauseAfterTyped = 1800,
   pauseAfterErased = 500,
   className = "",
   playClickSound = true,
-  clickVolume = 0.15,
+  clickVolume = 0.4,
 }) {
   const [displayed, setDisplayed] = useState("");
   const charIndexRef = useRef(0);
-  const phaseRef = useRef("waiting"); // waiting -> typing -> pausedTyped -> erasing -> pausedErased -> typing...
+  const phaseRef = useRef("waiting");
   const timeoutRef = useRef(null);
+  const clickAudioRef = useRef(null);
 
-  const playClick = () => {
-    if (!playClickSound) return;
-    try {
-      // New Audio instance per click so rapid successive clicks can
-      // overlap naturally instead of cutting each other off.
-      const audio = new Audio(CLICK_SOUND_SRC);
-      audio.volume = clickVolume;
-      audio.play().catch((err) => {
-        console.warn(
-          `Typewriter click sound failed to play (check that ${CLICK_SOUND_SRC} exists in /public/sounds/):`,
-          err,
-        );
-      });
-    } catch (err) {
-      console.warn("Typewriter click sound error:", err);
+  useEffect(() => {
+    const audio = new Audio(CLICK_SOUND_SRC);
+    audio.volume = clickVolume;
+    clickAudioRef.current = audio;
+    return () => {
+      audio.pause();
+      audio.src = "";
+    };
+  }, []);
+
+  useEffect(() => {
+    if (clickAudioRef.current) {
+      clickAudioRef.current.volume = clickVolume;
     }
+  }, [clickVolume]);
+
+  const playTypingSound = () => {
+    if (!playClickSound || !clickAudioRef.current) return;
+    const audio = clickAudioRef.current;
+    audio.currentTime = 0;
+    audio.play().catch((err) => {
+      console.warn(
+        `Typewriter sound failed to play (check that ${CLICK_SOUND_SRC} exists in /public/sounds/):`,
+        err,
+      );
+    });
+  };
+
+  const stopTypingSound = () => {
+    const audio = clickAudioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
   };
 
   useEffect(() => {
-    // Reset everything when the text itself changes
     charIndexRef.current = 0;
     phaseRef.current = "waiting";
     setDisplayed("");
@@ -61,9 +79,13 @@ export default function Typewriter({
 
       if (phase === "typing") {
         const next = charIndexRef.current + 1;
+
+        if (charIndexRef.current === 0) {
+          playTypingSound();
+        }
+
         charIndexRef.current = next;
         setDisplayed(text.slice(0, next));
-        playClick();
 
         if (next >= text.length) {
           phaseRef.current = "pausedTyped";
@@ -103,8 +125,10 @@ export default function Typewriter({
 
     timeoutRef.current = setTimeout(tick, 0);
 
-    return () => clearTimeout(timeoutRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      clearTimeout(timeoutRef.current);
+      stopTypingSound();
+    };
   }, [text, speed, eraseSpeed, startDelay, pauseAfterTyped, pauseAfterErased]);
 
   return (
@@ -115,7 +139,7 @@ export default function Typewriter({
         .typewriter-cursor {
           display: inline-block;
           margin-left: 2px;
-          animation: typewriterBlink 0.5s step-end infinite;
+          animation: typewriterBlink 0.9s step-end infinite;
         }
         @keyframes typewriterBlink {
           0%, 100% { opacity: 1; }

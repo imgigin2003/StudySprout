@@ -12,6 +12,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { MusicProvider } from "./components/MusicProvider";
 import ScrollToTop from "./components/ScrollToTop";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AuthNavbar from "./components/layout/AuthNavbar";
 import Login from "./pages/LoginPage";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -35,42 +36,51 @@ const AuthenticatedApp = () => {
   }
 
   return (
-    <Routes>
-      {/* 2. Public Routes */}
-      <Route
-        path="/login"
-        element={isAuthenticated ? <Navigate to="/garden" /> : <Login />}
-      />
-      <Route
-        path="/register"
-        element={isAuthenticated ? <Navigate to="/garden" /> : <Register />}
-      />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+    <>
+      <Routes>
+        {/* 2. Public Routes */}
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/garden" /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={isAuthenticated ? <Navigate to="/garden" /> : <Register />}
+        />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* 3. Landing Page (Only show if NOT authenticated) */}
-      <Route
-        path="/"
-        element={isAuthenticated ? <Navigate to="/garden" /> : <LandingPage />}
-      />
+        {/* 3. Landing Page (Only show if NOT authenticated) */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? <Navigate to="/garden" /> : <LandingPage />
+          }
+        />
 
-      {/* 4. Protected Routes (Requires Login) */}
-      <Route
-        element={
-          <ProtectedRoute
-            unauthenticatedElement={<Navigate to="/" replace />}
-          />
-        }
-      >
-        <Route element={<GardenLayout />}>
-          <Route path="/garden" element={<GardenPage />} />
-          <Route path="/timer" element={<TimerPage />} />
-          <Route path="/shelf" element={<ShelfPage />} />
+        {/* 4. Protected Routes (Requires Login) */}
+        <Route
+          element={
+            <ProtectedRoute
+              unauthenticatedElement={<Navigate to="/" replace />}
+            />
+          }
+        >
+          <Route element={<GardenLayout />}>
+            <Route path="/garden" element={<GardenPage />} />
+            <Route path="/timer" element={<TimerPage />} />
+            <Route path="/shelf" element={<ShelfPage />} />
+          </Route>
         </Route>
-      </Route>
 
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+
+      {/* Renders only on /, /login, /register — internally guarded by
+          AuthNavbar's own isAuthRoute check. GardenLayout renders the
+          separate main Navbar for /garden, /timer, /shelf. */}
+      <AuthNavbar />
+    </>
   );
 };
 
