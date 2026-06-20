@@ -1,6 +1,6 @@
 import React from "react";
 import { Plus } from "lucide-react";
-import PlantEmoji from "./PlantEmoji";
+import PlantEmoji, { getGrowthStage } from "@/components/garden/PlantEmoji";
 import XPBar from "./XPBar";
 
 export default function PlotSlot({ plant, onPlantClick, onEmptyClick }) {
@@ -21,16 +21,18 @@ export default function PlotSlot({ plant, onPlantClick, onEmptyClick }) {
     );
   }
 
+  const stage = getGrowthStage(
+    plant.currentXP,
+    plant.plant?.xpValue,
+    plant.plant?.isMaster,
+  );
+
   return (
     <button
       onClick={() => onPlantClick(plant)}
       className="flex flex-col items-center justify-center w-full aspect-square bg-amber-800/20 border-2 border-border rounded-md hover:bg-amber-800/30 transition-colors p-2"
     >
-      <PlantEmoji
-        type={plant.plant?.plantType}
-        stage={plant.plantStatus}
-        size="md"
-      />
+      <PlantEmoji type={plant.plant?.plantType} stage={stage} size="md" />
       <XPBar
         current={plant.currentXP}
         max={plant.plant?.xpValue}

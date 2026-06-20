@@ -3,7 +3,6 @@ const Plant = require("../models/Plant");
 
 const plantSeed = async (req, res, next) => {
   try {
-    console.log("req.body:", req.body);
     const user = await User.findById(req.user.id);
     const { name, plant_type, growthDuration, xpValue, description, isMaster } =
       req.body;
