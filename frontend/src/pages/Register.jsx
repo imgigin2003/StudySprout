@@ -4,7 +4,7 @@ import api from "../utils/api";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
+import { UserPlus, Mail, Lock, Loader2, VolumeX, Volume2 } from "lucide-react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -12,8 +12,10 @@ import {
 } from "../components/ui/input-otp";
 import AuthLayout from "../components/AuthLayout";
 import GoogleIcon from "../components/GoogleIcon";
+import { useMusic } from "@/components/MusicProvider";
 
 export default function Register() {
+  const { isPlaying, toggle } = useMusic();
   const [name, setName] = useState("");
   const [gardenName, setGardenName] = useState("");
   const [email, setEmail] = useState("");
@@ -58,14 +60,17 @@ export default function Register() {
         </>
       }
     >
-      {/* <Button
-        variant="outline"
-        className="w-full h-12 text-sm font-medium mb-6"
-        onClick={handleGoogle}
+      <button
+        onClick={toggle}
+        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
+        aria-label={isPlaying ? "Mute music" : "Play music"}
       >
-        <GoogleIcon className="w-5 h-5 mr-2" />
-        Continue with Google
-      </Button> */}
+        {isPlaying ? (
+          <Volume2 size={16} className="text-foreground" />
+        ) : (
+          <VolumeX size={16} className="text-muted-foreground" />
+        )}
+      </button>
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">

@@ -4,10 +4,12 @@ import api from "../utils/api";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Lock, Loader2, AlertTriangle } from "lucide-react";
+import { Lock, Loader2, AlertTriangle, VolumeX, Volume2 } from "lucide-react";
 import AuthLayout from "../components/AuthLayout";
+import { useMusic } from "@/components/MusicProvider";
 
 export default function ResetPassword() {
+  const { isPlaying, toggle } = useMusic();
   const [searchParams] = useSearchParams();
   const resetToken = searchParams.get("token");
 
@@ -63,6 +65,18 @@ export default function ResetPassword() {
       title="New password"
       subtitle="Enter your new password below"
     >
+      {/* Music toggle */}
+      <button
+        onClick={toggle}
+        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
+        aria-label={isPlaying ? "Mute music" : "Play music"}
+      >
+        {isPlaying ? (
+          <Volume2 size={16} className="text-foreground" />
+        ) : (
+          <VolumeX size={16} className="text-muted-foreground" />
+        )}
+      </button>
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
           {error}
