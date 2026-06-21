@@ -14,7 +14,7 @@ const MusicContext = createContext(null);
  * above the Router) so navigating between pages never recreates or
  * restarts the audio.
  */
-export function MusicProvider({ src, volume = 0.15, loop = true, children }) {
+export function MusicProvider({ src, volume = 0.12, loop = true, children }) {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 

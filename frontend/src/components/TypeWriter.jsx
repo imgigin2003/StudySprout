@@ -13,7 +13,7 @@ const CLICK_SOUND_SRC = "/sounds/typewriter-click.mp3";
  */
 export default function Typewriter({
   text,
-  speed = 45,
+  speed = 25,
   eraseSpeed = 25,
   startDelay = 300,
   pauseAfterTyped = 1800,

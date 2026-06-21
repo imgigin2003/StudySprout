@@ -5,7 +5,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const CLICK_SOUND_SRC = "/sounds/button-click.mp3";
-const DEFAULT_CLICK_VOLUME = 0.4;
+const DEFAULT_CLICK_VOLUME = 0.2;
 
 function playClickSound(volume = DEFAULT_CLICK_VOLUME) {
   try {
