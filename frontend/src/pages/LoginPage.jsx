@@ -62,19 +62,28 @@ export default function Login() {
           </Link>
         </>
       }
+      headerAction={
+        <button
+          onClick={toggle}
+          className="bg-card border-2 border-border rounded-md p-2 shrink-0"
+          aria-label={isPlaying ? "Mute music" : "Play music"}
+        >
+          {isPlaying ? (
+            <Volume2 size={16} className="text-foreground" />
+          ) : (
+            <VolumeX size={16} className="text-muted-foreground" />
+          )}
+        </button>
+      }
     >
-      {/* Music toggle */}
-      <button
-        onClick={toggle}
-        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
-        aria-label={isPlaying ? "Mute music" : "Play music"}
+      <Button
+        variant="outline"
+        className="w-full h-12 text-sm font-medium mb-6"
+        onClick={handleGoogle}
       >
-        {isPlaying ? (
-          <Volume2 size={16} className="text-foreground" />
-        ) : (
-          <VolumeX size={16} className="text-muted-foreground" />
-        )}
-      </button>
+        <GoogleIcon className="w-5 h-5 mr-2" />
+        Continue with Google
+      </Button>
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ChevronLeft,
   Sprout,
   Droplets,
   Calendar,
@@ -30,14 +29,10 @@ export default function GardenPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // Your backend returns { garden: [...] } from /garden
-      // and { user: {...} } from /auth/profile for stats
       const [gardenRes, profileRes] = await Promise.all([
         api.get("/garden"),
         api.get("/auth/profile"),
       ]);
-
-      // 'garden' in your User model is an array of { plant: {...}, currentXP, plantStatus }
       setPlants(gardenRes.data.garden || []);
       setStats(profileRes.data.user || null);
     } catch (error) {
@@ -78,7 +73,6 @@ export default function GardenPage() {
   };
 
   const handleStudy = (plant) => {
-    // plant._id is the plot ID in your garden array
     navigate(`/timer?plotId=${plant._id}`);
   };
 
@@ -101,11 +95,10 @@ export default function GardenPage() {
     setShowCreate(true);
   };
 
-  // Map stats from your backend User model
   const totalXP = stats?.totalXP || 0;
   const gardenName = stats?.gardenName || "My Garden";
   const streak = stats?.streakDays || 0;
-  const focusRate = 0; // Logic for this can be added to your backend later
+  const focusRate = 0;
 
   if (loading) {
     return (
@@ -116,7 +109,7 @@ export default function GardenPage() {
   }
 
   return (
-    <div className="px-4 py-4">
+    <div className="px-4 py-4 lg:px-8 lg:py-8">
       {/* Top XP Bar */}
       <div className="mb-4">
         <p className="font-heading text-[7px] text-foreground mb-1">TOTAL XP</p>
@@ -128,7 +121,7 @@ export default function GardenPage() {
           <span className="font-body text-sm text-foreground">
             {totalXP.toLocaleString()} XP
           </span>
-          <div className="flex items-center gap-1 bg-destructive/10 px-2 py-1 rounded-md">
+          <div className="flex items-center gap-1 bg-destructive/10 px-2 py-1 rounded-md shrink-0">
             <Flame size={14} className="text-destructive" />
             <span className="font-heading text-[8px] text-foreground">
               {streak}
@@ -137,35 +130,28 @@ export default function GardenPage() {
         </div>
       </div>
 
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <button
-          onClick={() => navigate("/")}
-          className="bg-secondary border border-border rounded-md p-2"
-        >
-          <ChevronLeft size={16} className="text-foreground" />
-        </button>
-        <div>
-          <h1 className="font-heading text-sm text-foreground flex items-center gap-2 uppercase">
+      {/* Header — NO absolute positioning, music toggle lives in this flex row */}
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <div className="min-w-0">
+          <h1 className="font-heading text-sm text-foreground flex items-center gap-2 uppercase truncate">
             🌱 {gardenName}
           </h1>
           <p className="font-heading text-[7px] text-muted-foreground mt-0.5">
             YOUR FOCUS, YOUR GARDEN
           </p>
         </div>
+        <button
+          onClick={toggle}
+          className="bg-secondary border border-border rounded-md p-2 shrink-0"
+          aria-label={isPlaying ? "Mute music" : "Play music"}
+        >
+          {isPlaying ? (
+            <Volume2 size={16} className="text-foreground" />
+          ) : (
+            <VolumeX size={16} className="text-muted-foreground" />
+          )}
+        </button>
       </div>
-
-      <button
-        onClick={toggle}
-        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
-        aria-label={isPlaying ? "Mute music" : "Play music"}
-      >
-        {isPlaying ? (
-          <Volume2 size={16} className="text-foreground" />
-        ) : (
-          <VolumeX size={16} className="text-muted-foreground" />
-        )}
-      </button>
 
       {/* Garden Grid */}
       <GardenGrid
@@ -179,7 +165,7 @@ export default function GardenPage() {
         <h2 className="font-heading text-[9px] text-foreground mb-3 flex items-center gap-1">
           🌿 GARDEN STATS
         </h2>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-2 lg:gap-4">
           <StatCard
             icon={<Sprout size={18} className="text-primary" />}
             value={plants.length}

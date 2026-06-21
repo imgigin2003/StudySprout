@@ -96,27 +96,29 @@ export default function ShelfPage() {
   ];
 
   return (
-    <div className="px-4 py-4">
+    <div className="px-4 py-4 lg:px-8 lg:py-8">
       {/* Header */}
-      <div className="text-center mb-5">
-        <h1 className="font-heading text-sm text-foreground flex items-center justify-center gap-2">
-          🌿 MY SHELF 🌿
-        </h1>
-        <p className="font-heading text-[7px] text-muted-foreground mt-1">
-          MASTERED PLANTS · {mastered.length} OF {plants.length}
-        </p>
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <div className="min-w-0">
+          <h1 className="font-heading text-sm text-foreground flex items-center justify-center gap-2">
+            🌿 MY SHELF 🌿
+          </h1>
+          <p className="font-heading text-[7px] text-muted-foreground mt-1">
+            MASTERED PLANTS · {mastered.length} OF {plants.length}
+          </p>
+        </div>
+        <button
+          onClick={toggle}
+          className="bg-secondary border border-border rounded-md p-2 shrink-0"
+          aria-label={isPlaying ? "Mute music" : "Play music"}
+        >
+          {isPlaying ? (
+            <Volume2 size={16} className="text-foreground" />
+          ) : (
+            <VolumeX size={16} className="text-muted-foreground" />
+          )}
+        </button>
       </div>
-      <button
-        onClick={toggle}
-        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
-        aria-label={isPlaying ? "Mute music" : "Play music"}
-      >
-        {isPlaying ? (
-          <Volume2 size={16} className="text-foreground" />
-        ) : (
-          <VolumeX size={16} className="text-muted-foreground" />
-        )}
-      </button>
 
       {/* Shelf Display — mastered only */}
       <div className="bg-card border-2 border-border rounded-lg p-4 mb-5">
