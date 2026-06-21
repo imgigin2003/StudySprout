@@ -8,9 +8,9 @@ import {
   VolumeX,
   Volume2,
 } from "lucide-react";
-import api from "../utils/api";
+import api from "@/utils/api";
 import PlantEmoji from "@/components/garden/PlantEmoji";
-import HarvestedPlantDetail from "../components/plant/HarvestedPlantDetail";
+import HarvestedPlantDetail from "@/components/plant/HarvestedPlantDetail";
 import { useMusic } from "@/components/MusicProvider";
 
 const achievements = [

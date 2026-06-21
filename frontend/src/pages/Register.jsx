@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../utils/api";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+import api from "@/utils/api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Loader2, VolumeX, Volume2 } from "lucide-react";
-import AuthLayout from "../components/AuthLayout";
+import AuthLayout from "@/components/AuthLayout";
 import { useMusic } from "@/components/MusicProvider";
 
 export default function Register() {

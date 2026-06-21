@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useLocation } from "react-router-dom";
 import { Sprout, Timer, BookOpen } from "lucide-react";
 import SoundLink from "@/components/SoundLink";

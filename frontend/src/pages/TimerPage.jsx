@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import api from "../utils/api";
+import api from "@/utils/api";
 import { ChevronLeft, VolumeX, Volume2 } from "lucide-react";
-import PomodoroTimer from "../components/timer/PomodroTimer";
+import PomodoroTimer from "@/components/timer/PomodroTimer";
 import { useMusic } from "@/components/MusicProvider";
 
 export default function TimerPage() {

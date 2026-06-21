@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useLocation } from "react-router-dom";
 import { Lock, UserRound } from "lucide-react";
 import SoundLink from "@/components/SoundLink";
