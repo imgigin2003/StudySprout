@@ -32,7 +32,7 @@ export default function PomodoroTimer({
   const isLocked = !plant;
 
   const playSessionComplete = useSound("/sounds/session-complete.mp3", {
-    volume: 0.4,
+    volume: 0.6,
   });
 
   // Derive the plant's growth stage live from XP progress
@@ -316,8 +316,8 @@ function TimeAdjust({ label, sublabel, value, onChange }) {
         >
           −
         </button>
-        <div className="w-24 h-10 bg-background border-2 border-border rounded-md flex items-center justify-center">
-          <span className="font-display text-xl text-foreground">
+        <div className="w-32 h-12 bg-background border-2 border-border rounded-md flex items-center justify-center px-2 overflow-hidden">
+          <span className="font-display text-lg text-foreground whitespace-nowrap">
             {String(value).padStart(2, "0")}:00
           </span>
         </div>

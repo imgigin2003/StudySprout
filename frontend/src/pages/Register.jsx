@@ -1,20 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { UserPlus, Mail, Lock, Loader2, VolumeX, Volume2 } from "lucide-react";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "../components/ui/input-otp";
 import AuthLayout from "../components/AuthLayout";
-import GoogleIcon from "../components/GoogleIcon";
 import { useMusic } from "@/components/MusicProvider";
 
 export default function Register() {
+  const navigate = useNavigate();
   const { isPlaying, toggle } = useMusic();
   const [name, setName] = useState("");
   const [gardenName, setGardenName] = useState("");
@@ -34,8 +29,7 @@ export default function Register() {
     setLoading(true);
     try {
       await api.post("/auth/register", { name, gardenName, email, password });
-
-      window.location.href = "/login";
+      navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {
@@ -59,28 +53,20 @@ export default function Register() {
           </Link>
         </>
       }
+      headerAction={
+        <button
+          onClick={toggle}
+          className="bg-card border-2 border-border rounded-md p-2 shrink-0"
+          aria-label={isPlaying ? "Mute music" : "Play music"}
+        >
+          {isPlaying ? (
+            <Volume2 size={16} className="text-foreground" />
+          ) : (
+            <VolumeX size={16} className="text-muted-foreground" />
+          )}
+        </button>
+      }
     >
-      <button
-        onClick={toggle}
-        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
-        aria-label={isPlaying ? "Mute music" : "Play music"}
-      >
-        {isPlaying ? (
-          <Volume2 size={16} className="text-foreground" />
-        ) : (
-          <VolumeX size={16} className="text-muted-foreground" />
-        )}
-      </button>
-
-      <div className="relative mb-6">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
-        </div>
-      </div>
-
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
           {error}
@@ -90,30 +76,26 @@ export default function Register() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="name">Full Name</Label>
-          <div className="relative">
-            <Input
-              id="name"
-              type="text"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
-          </div>
+          <Input
+            id="name"
+            type="text"
+            placeholder="John Doe"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="h-12"
+            required
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="gardenName">Garden Name</Label>
-          <div className="relative">
-            <Input
-              id="gardenName"
-              type="text"
-              placeholder="My Secret Garden"
-              value={gardenName}
-              onChange={(e) => setGardenName(e.target.value)}
-              className="pl-10 h-12"
-            />
-          </div>
+          <Input
+            id="gardenName"
+            type="text"
+            placeholder="My Secret Garden"
+            value={gardenName}
+            onChange={(e) => setGardenName(e.target.value)}
+            className="h-12"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>

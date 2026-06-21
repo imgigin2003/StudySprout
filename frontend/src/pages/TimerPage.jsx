@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../utils/api";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, VolumeX, Volume2 } from "lucide-react";
 import PomodoroTimer from "../components/timer/PomodroTimer";
 import { useMusic } from "@/components/MusicProvider";
-import { VolumeX, Volume2 } from "lucide-react";
 
 export default function TimerPage() {
   const { isPlaying, toggle } = useMusic();
@@ -48,7 +47,6 @@ export default function TimerPage() {
   const handleComplete = async () => {
     try {
       await api.post("/pomodoro/complete", { sessionId });
-
       navigate("/garden");
     } catch (error) {
       console.error(
@@ -58,10 +56,8 @@ export default function TimerPage() {
     }
   };
 
-  // Call this if the user stops the timer early
   const handleStopEarly = async () => {
     try {
-      // 4. Your backend /pomodoro/stop calculates partial XP based on time spent!
       await api.post("/pomodoro/stop", { sessionId });
       navigate("/garden");
     } catch (error) {
@@ -78,34 +74,33 @@ export default function TimerPage() {
   }
 
   return (
-    <div className="px-4 py-4">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+    <div className="px-4 py-4 lg:px-8 lg:py-8">
+      {/* Header — three-column flex row, nothing absolutely positioned */}
+      <div className="flex items-center justify-between gap-2 mb-5">
         <button
           onClick={() => navigate("/garden")}
-          className="flex items-center gap-1 text-foreground font-heading text-[8px]"
+          className="flex items-center gap-1 text-foreground font-heading text-[8px] shrink-0"
         >
           <ChevronLeft size={16} /> GARDEN
         </button>
-        <div className="flex items-center gap-1">
-          <span className="text-lg">🌱</span>
-          <span className="font-heading text-xs text-foreground">
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="text-lg shrink-0">🌱</span>
+          <span className="font-heading text-xs text-foreground truncate">
             FOCUS MODE
           </span>
         </div>
-        <div className="w-16" />
+        <button
+          onClick={toggle}
+          className="bg-secondary border border-border rounded-md p-2 shrink-0"
+          aria-label={isPlaying ? "Mute music" : "Play music"}
+        >
+          {isPlaying ? (
+            <Volume2 size={16} className="text-foreground" />
+          ) : (
+            <VolumeX size={16} className="text-muted-foreground" />
+          )}
+        </button>
       </div>
-      <button
-        onClick={toggle}
-        className="absolute top-6 left-6 bg-card border-2 border-border rounded-md p-2 z-10"
-        aria-label={isPlaying ? "Mute music" : "Play music"}
-      >
-        {isPlaying ? (
-          <Volume2 size={16} className="text-foreground" />
-        ) : (
-          <VolumeX size={16} className="text-muted-foreground" />
-        )}
-      </button>
 
       {/* Timer */}
       <PomodoroTimer
