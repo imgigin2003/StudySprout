@@ -88,7 +88,7 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <MusicProvider src="/sounds/bgm.m4a" volume={0.15} loop>
+        <MusicProvider src="/sounds/bgm.m4a" volume={0.17} loop>
           <Router>
             <ScrollToTop />
             <AuthenticatedApp />

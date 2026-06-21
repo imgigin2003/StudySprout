@@ -32,7 +32,7 @@ export default function PomodoroTimer({
   const isLocked = !plant;
 
   const playSessionComplete = useSound("/sounds/session-complete.mp3", {
-    volume: 0.6,
+    volume: 0.4,
   });
 
   // Derive the plant's growth stage live from XP progress

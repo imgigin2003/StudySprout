@@ -12,7 +12,7 @@ import { useCallback, useRef } from "react";
  * Each call creates a fresh Audio instance so rapid repeated calls
  * (e.g. fast clicking) overlap naturally instead of cutting each other off.
  */
-export default function useSound(src, { volume = 0.5 } = {}) {
+export default function useSound(src, { volume = 0.3 } = {}) {
   const volumeRef = useRef(volume);
   volumeRef.current = volume;
 

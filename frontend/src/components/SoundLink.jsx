@@ -4,7 +4,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 
 const CLICK_SOUND_SRC = "/sounds/button-click.mp3";
-const DEFAULT_CLICK_VOLUME = 0.4;
+const DEFAULT_CLICK_VOLUME = 0.2;
 
 function playClickSound(volume = DEFAULT_CLICK_VOLUME) {
   try {
