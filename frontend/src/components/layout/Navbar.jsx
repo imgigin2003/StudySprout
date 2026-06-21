@@ -3,15 +3,21 @@
 import { useLocation } from "react-router-dom";
 import { Sprout, Timer, BookOpen } from "lucide-react";
 import SoundLink from "@/components/SoundLink";
-
-const navItems = [
-  { path: "/garden", label: "MY GARDEN", icon: Sprout },
-  { path: "/timer", label: "STUDY TIMER", icon: Timer },
-  { path: "/shelf", label: "MY SHELF", icon: BookOpen },
-];
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const location = useLocation();
+  const { user } = useAuth();
+
+  const gardenLabel = user?.gardenName
+    ? user.gardenName.toUpperCase()
+    : "MY GARDEN";
+
+  const navItems = [
+    { path: "/garden", label: gardenLabel, icon: Sprout },
+    { path: "/timer", label: "STUDY TIMER", icon: Timer },
+    { path: "/shelf", label: "MY SHELF", icon: BookOpen },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-primary border-t-2 border-border">
@@ -30,7 +36,7 @@ export default function Navbar() {
               }`}
             >
               <Icon size={20} strokeWidth={2.5} />
-              <span className="font-heading text-[7px] tracking-wider">
+              <span className="font-heading text-[7px] tracking-wider truncate max-w-[80px] text-center">
                 {item.label}
               </span>
             </SoundLink>
