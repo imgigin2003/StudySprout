@@ -2,7 +2,7 @@
 
 > **Grow your focus. One session at a time.**
 
-![Garden animation](https://raw.githubusercontent.com/imgigin2003/StudySprout/main/frontend/src/assets/garden.gif)
+![Garden animation](frontend/src/assets/garden.gif)
 
 StudySprout is a gamified productivity app that turns focused study time into a flourishing virtual garden. Complete Pomodoro sessions to earn XP, grow unique plants, unlock rare species through daily streaks, and build a beautiful display of your academic achievements.
 
