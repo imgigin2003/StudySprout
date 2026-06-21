@@ -103,6 +103,7 @@ export default function GardenPage() {
 
   // Map stats from your backend User model
   const totalXP = stats?.totalXP || 0;
+  const gardenName = stats?.gardenName || "My Garden";
   const streak = stats?.streakDays || 0;
   const focusRate = 0; // Logic for this can be added to your backend later
 
@@ -145,8 +146,8 @@ export default function GardenPage() {
           <ChevronLeft size={16} className="text-foreground" />
         </button>
         <div>
-          <h1 className="font-heading text-sm text-foreground flex items-center gap-2">
-            🌱 MY GARDEN
+          <h1 className="font-heading text-sm text-foreground flex items-center gap-2 uppercase">
+            🌱 {gardenName}
           </h1>
           <p className="font-heading text-[7px] text-muted-foreground mt-0.5">
             YOUR FOCUS, YOUR GARDEN
