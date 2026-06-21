@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
@@ -47,27 +47,22 @@ const forgotPassword = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      // For security, don't reveal if user exists
       return res.json({
         message: "If an account exists, a reset link has been sent.",
       });
     }
 
-    // Generate a random token
     const resetToken = crypto.randomBytes(20).toString("hex");
 
-    // Set token and expiry (1 hour) on user model
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 3600000;
     await user.save();
 
-    // In a real app, you would send an email here using Nodemailer.
-    // For now, we'll return the token in the response so you can test it.
     console.log(`Reset Token for ${email}: ${resetToken}`);
 
     res.json({
       message: "Reset token generated (Check console for local testing)",
-      resetToken, // Remove this in production!
+      resetToken,
     });
   } catch (error) {
     next(error);
@@ -79,7 +74,7 @@ const resetPassword = async (req, res, next) => {
   try {
     const user = await User.findOne({
       resetPasswordToken: resetToken,
-      resetPasswordExpires: { $gt: Date.now() }, // Must not be expired
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -88,7 +83,6 @@ const resetPassword = async (req, res, next) => {
         .json({ message: "Invalid or expired reset token" });
     }
 
-    // Update password (the pre-save hook in User.js will hash it automatically)
     user.password = newPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
