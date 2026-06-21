@@ -1,8 +1,8 @@
 import React from "react";
 import { Sprout, LogIn, Volume2, VolumeX } from "lucide-react";
-import Typewriter from "../components/TypeWriter";
-import { useMusic } from "../components/MusicProvider";
-import SoundLink from "../components/SoundLink";
+import Typewriter from "@/components/TypeWriter";
+import { useMusic } from "@/components/MusicProvider";
+import SoundLink from "@/components/SoundLink";
 
 export default function LandingPage() {
   const { isPlaying, toggle } = useMusic();

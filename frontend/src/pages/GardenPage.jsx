@@ -8,12 +8,12 @@ import {
   VolumeX,
   Volume2,
 } from "lucide-react";
-import GardenGrid from "../components/garden/GardenGrid";
-import XPBar from "../components/garden/XPBar";
-import CreatePlantModal from "../components/plant/CreatePlantModal";
-import PlantDetail from "../components/plant/PlantDetail";
+import GardenGrid from "@/components/garden/GardenGrid";
+import XPBar from "@/components/garden/XPBar";
+import CreatePlantModal from "@/components/plant/CreatePlantModal";
+import PlantDetail from "@/components/plant/PlantDetail";
 import { useMusic } from "@/components/MusicProvider";
-import api from "../utils/api";
+import api from "@/utils/api";
 
 export default function GardenPage() {
   const { isPlaying, toggle } = useMusic();

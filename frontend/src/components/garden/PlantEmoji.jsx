@@ -1,52 +1,52 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import roseSeed from "../../assets/plants/rose-seed.png";
-import roseSprout from "../../assets/plants/rose-sprout.png";
-import roseBloom from "../../assets/plants/rose-bloom.png";
+import roseSeed from "@/assets/plants/rose-seed.png";
+import roseSprout from "@/assets/plants/rose-sprout.png";
+import roseBloom from "@/assets/plants/rose-bloom.png";
 
-import cactusSeed from "../../assets/plants/cactus-seed.png";
-import cactusSprout from "../../assets/plants/cactus-sprout.png";
-import cactusBloom from "../../assets/plants/cactus-bloom.png";
+import cactusSeed from "@/assets/plants/cactus-seed.png";
+import cactusSprout from "@/assets/plants/cactus-sprout.png";
+import cactusBloom from "@/assets/plants/cactus-bloom.png";
 
-import tulipSeed from "../../assets/plants/tulip-seed.png";
-import tulipSprout from "../../assets/plants/tulip-sprout.png";
-import tulipBloom from "../../assets/plants/tulip-bloom.png";
+import tulipSeed from "@/assets/plants/tulip-seed.png";
+import tulipSprout from "@/assets/plants/tulip-sprout.png";
+import tulipBloom from "@/assets/plants/tulip-bloom.png";
 
-import lilySeed from "../../assets/plants/lily-seed.png";
-import lilySprout from "../../assets/plants/lily-sprout.png";
-import lilyBloom from "../../assets/plants/lily-bloom.png";
+import lilySeed from "@/assets/plants/lily-seed.png";
+import lilySprout from "@/assets/plants/lily-sprout.png";
+import lilyBloom from "@/assets/plants/lily-bloom.png";
 
-import orchidSeed from "../../assets/plants/orchid-seed.png";
-import orchidSprout from "../../assets/plants/orchid-sprout.png";
-import orchidBloom from "../../assets/plants/orchid-bloom.png";
+import orchidSeed from "@/assets/plants/orchid-seed.png";
+import orchidSprout from "@/assets/plants/orchid-sprout.png";
+import orchidBloom from "@/assets/plants/orchid-bloom.png";
 
-import daffodilSeed from "../../assets/plants/daffodil-seed.png";
-import daffodilSprout from "../../assets/plants/daffodil-sprout.png";
-import daffodilBloom from "../../assets/plants/daffodil-bloom.png";
+import daffodilSeed from "@/assets/plants/daffodil-seed.png";
+import daffodilSprout from "@/assets/plants/daffodil-sprout.png";
+import daffodilBloom from "@/assets/plants/daffodil-bloom.png";
 
-import daisySeed from "../../assets/plants/daisy-seed.png";
-import daisySprout from "../../assets/plants/daisy-sprout.png";
-import daisyBloom from "../../assets/plants/daisy-bloom.png";
+import daisySeed from "@/assets/plants/daisy-seed.png";
+import daisySprout from "@/assets/plants/daisy-sprout.png";
+import daisyBloom from "@/assets/plants/daisy-bloom.png";
 
-import irisSeed from "../../assets/plants/iris-seed.png";
-import irisSprout from "../../assets/plants/iris-sprout.png";
-import irisBloom from "../../assets/plants/iris-bloom.png";
+import irisSeed from "@/assets/plants/iris-seed.png";
+import irisSprout from "@/assets/plants/iris-sprout.png";
+import irisBloom from "@/assets/plants/iris-bloom.png";
 
-import stephanitosSeed from "../../assets/plants/stephanitos-hoop-seed.png";
-import stephanitosSprout from "../../assets/plants/stephanitos-hoop-sprout.png";
-import stephanitosBloom from "../../assets/plants/stephanitos-hoop-bloom.png";
+import stephanitosSeed from "@/assets/plants/stephanitos-hoop-seed.png";
+import stephanitosSprout from "@/assets/plants/stephanitos-hoop-sprout.png";
+import stephanitosBloom from "@/assets/plants/stephanitos-hoop-bloom.png";
 
-import sunflowerSeed from "../../assets/plants/sunflower-seed.png";
-import sunflowerSprout from "../../assets/plants/sunflower-sprout.png";
-import sunflowerBloom from "../../assets/plants/sunflower-bloom.png";
+import sunflowerSeed from "@/assets/plants/sunflower-seed.png";
+import sunflowerSprout from "@/assets/plants/sunflower-sprout.png";
+import sunflowerBloom from "@/assets/plants/sunflower-bloom.png";
 
-import pachiraSeed from "../../assets/plants/pachira-seed.png";
-import pachiraSprout from "../../assets/plants/pachira-sprout.png";
-import pachiraBloom from "../../assets/plants/pachira-bloom.png";
+import pachiraSeed from "@/assets/plants/pachira-seed.png";
+import pachiraSprout from "@/assets/plants/pachira-sprout.png";
+import pachiraBloom from "@/assets/plants/pachira-bloom.png";
 
-import hangingSpiderSeed from "../../assets/plants/hanging-spider-seed.png";
-import hangingSpiderSprout from "../../assets/plants/hanging-spider-sprout.png";
-import hangingSpiderBloom from "../../assets/plants/hanging-spider-bloom.png";
+import hangingSpiderSeed from "@/assets/plants/hanging-spider-seed.png";
+import hangingSpiderSprout from "@/assets/plants/hanging-spider-sprout.png";
+import hangingSpiderBloom from "@/assets/plants/hanging-spider-bloom.png";
 
 // Pixel art image sets per plant type. Each type maps to seed/sprout/bloom images.
 const plantImages = {

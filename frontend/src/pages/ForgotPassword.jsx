@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Mail, ArrowLeft, Loader2, VolumeX, Volume2 } from "lucide-react";
-import AuthLayout from "../components/AuthLayout";
-import api from "../utils/api";
+import AuthLayout from "@/components/AuthLayout";
+import api from "@/utils/api";
 import { useMusic } from "@/components/MusicProvider";
 
 export default function ForgotPassword() {

@@ -12,7 +12,14 @@ const app = express();
 
 app.use(express.json());
 app.use(express.static("Public"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://imgigin2003.github.io",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 app.use("/api/plant", plantRoutes);
 app.use("/api/garden", gardenRoutes);
