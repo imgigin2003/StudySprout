@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, Trash2, Trophy } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import PlantEmoji from "@/components/garden/PlantEmoji";
 
 export default function HarvestedPlantDetail({

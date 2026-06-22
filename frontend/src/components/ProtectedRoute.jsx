@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import UserNotRegisteredError from "../components/UserNotRegisteredError";
+import { useAuth } from "@/context/AuthContext";
+import UserNotRegisteredError from "@/components/UserNotRegisteredError";
 
 const DefaultFallback = () => (
   <div className="fixed inset-0 flex items-center justify-center">
