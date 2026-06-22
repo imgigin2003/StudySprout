@@ -33,8 +33,9 @@ const loginUser = async (req, res, next) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+    // JWT token expires in 5 days (120 hours)
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
+      expiresIn: "5d",
     });
     res.json({ message: "Login successful", token });
   } catch (error) {

@@ -1,11 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Sprout, LogIn, Volume2, VolumeX } from "lucide-react";
 import Typewriter from "@/components/TypeWriter";
 import { useMusic } from "@/components/MusicProvider";
+import { useAuth } from "@/context/AuthContext";
 import SoundLink from "@/components/SoundLink";
 
 export default function LandingPage() {
   const { isPlaying, toggle } = useMusic();
+  const { loginAsGuest } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGuestClick = () => {
+    loginAsGuest();
+    navigate("/garden");
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col lg:flex-row">
@@ -86,15 +95,15 @@ export default function LandingPage() {
               SIGN IN / LOGIN
             </span>
           </SoundLink>
-          <SoundLink
-            to="/garden"
+          <button
+            onClick={handleGuestClick}
             className="w-full flex items-center justify-center gap-2 bg-card border-2 border-border rounded-md py-3 px-4 hover:bg-secondary transition-colors"
           >
             <Sprout size={16} className="text-foreground" />
             <span className="font-heading text-[9px] text-foreground tracking-wider">
               CONTINUE AS GUEST
             </span>
-          </SoundLink>
+          </button>
         </div>
 
         {/* Footer tag */}

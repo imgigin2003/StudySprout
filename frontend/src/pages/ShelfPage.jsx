@@ -12,6 +12,7 @@ import api from "@/utils/api";
 import PlantEmoji from "@/components/garden/PlantEmoji";
 import HarvestedPlantDetail from "@/components/plant/HarvestedPlantDetail";
 import { useMusic } from "@/components/MusicProvider";
+import { useAuth } from "@/context/AuthContext";
 
 const achievements = [
   {
@@ -49,12 +50,17 @@ const achievements = [
 
 export default function ShelfPage() {
   const { isPlaying, toggle } = useMusic();
+  const { isGuest } = useAuth();
   const [plants, setPlants] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedPlant, setSelectedPlant] = useState(null);
 
   const loadShelf = async () => {
+    if (isGuest) {
+      setLoading(false);
+      return;
+    }
     try {
       const response = await api.get("/plant/harvested");
       setPlants(response.data.harvestedPlants || []);
@@ -71,6 +77,10 @@ export default function ShelfPage() {
   }, []);
 
   const handleDelete = async (plantId) => {
+    if (isGuest) {
+      setPlants((prev) => prev.filter((p) => p._id !== plantId));
+      return;
+    }
     try {
       await api.delete("/plant/harvested", { data: { plantId } });
       loadShelf();
@@ -119,6 +129,19 @@ export default function ShelfPage() {
           )}
         </button>
       </div>
+
+      {/* Guest banner */}
+      {isGuest && (
+        <div className="mb-4 bg-accent/20 border border-accent/40 rounded-md px-3 py-2 text-center">
+          <p className="font-heading text-[7px] text-foreground tracking-wider">
+            🌱 GUEST MODE — DATA IS NOT SAVED.{" "}
+            <a href="/register" className="underline text-primary">
+              CREATE AN ACCOUNT
+            </a>{" "}
+            TO KEEP YOUR PROGRESS!
+          </p>
+        </div>
+      )}
 
       {/* Shelf Display — mastered only */}
       <div className="bg-card border-2 border-border rounded-lg p-4 mb-5">

@@ -24,7 +24,7 @@ import ShelfPage from "./pages/ShelfPage";
 import GardenLayout from "./components/layout/GardenLayout";
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isAuthenticated, authChecked } = useAuth();
+  const { isLoadingAuth, isAuthenticated, isGuest, authChecked } = useAuth();
 
   // 1. Show loading spinner while checking auth
   if (isLoadingAuth || !authChecked) {
@@ -34,6 +34,9 @@ const AuthenticatedApp = () => {
       </div>
     );
   }
+
+  // A user is "in the app" if they are authenticated OR browsing as a guest.
+  const inApp = isAuthenticated || isGuest;
 
   return (
     <>
@@ -50,15 +53,13 @@ const AuthenticatedApp = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* 3. Landing Page (Only show if NOT authenticated) */}
+        {/* 3. Landing Page (Only show if NOT in the app) */}
         <Route
           path="/"
-          element={
-            isAuthenticated ? <Navigate to="/garden" /> : <LandingPage />
-          }
+          element={inApp ? <Navigate to="/garden" /> : <LandingPage />}
         />
 
-        {/* 4. Protected Routes (Requires Login) */}
+        {/* 4. Protected Routes (Requires Login OR Guest mode) */}
         <Route
           element={
             <ProtectedRoute

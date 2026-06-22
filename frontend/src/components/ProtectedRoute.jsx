@@ -16,6 +16,7 @@ export default function ProtectedRoute({
 }) {
   const {
     isAuthenticated,
+    isGuest,
     isLoadingAuth,
     authChecked,
     authError,
@@ -39,7 +40,8 @@ export default function ProtectedRoute({
     return unauthenticatedElement;
   }
 
-  if (!isAuthenticated) {
+  // Allow both authenticated users AND guests to access protected pages.
+  if (!isAuthenticated && !isGuest) {
     return unauthenticatedElement;
   }
 

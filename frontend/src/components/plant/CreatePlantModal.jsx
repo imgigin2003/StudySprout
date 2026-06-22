@@ -87,8 +87,8 @@ export default function CreatePlantModal({
   // Mastery confirmation screen
   if (step === "mastery-confirm") {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-        <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5">
+      <div className="fixed inset-0 z-50 flex items-start justify-center bg-foreground/40 p-4 overflow-y-auto">
+        <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5 my-auto">
           <div className="flex flex-col items-center gap-4 text-center">
             <div className="text-4xl">🏆</div>
             <h2 className="font-heading text-xs text-foreground">
@@ -123,8 +123,11 @@ export default function CreatePlantModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-      <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5 max-h-[90vh] overflow-y-auto">
+    /* On mobile the overlay scrolls so the full form — including the plant
+       picker at the bottom — is always reachable. On larger screens the card
+       stays vertically centred as before. */
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-foreground/40 p-4 overflow-y-auto">
+      <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5 my-auto">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-heading text-xs text-foreground flex items-center gap-2">
             <Sprout size={16} /> PLANT A SEED
