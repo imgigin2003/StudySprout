@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2, Volume2, VolumeX } from "lucide-react";
-import AuthLayout from "../components/AuthLayout";
-import GoogleIcon from "../components/GoogleIcon";
-import api from "../utils/api";
-import { useAuth } from "../context/AuthContext";
-import { useMusic } from "../components/MusicProvider";
+import AuthLayout from "@/components/AuthLayout";
+import GoogleIcon from "@/components/GoogleIcon";
+import api from "@/utils/api";
+import { useAuth } from "@/context/AuthContext";
+import { useMusic } from "@/components/MusicProvider";
 
 export default function Login() {
   const navigate = useNavigate();
