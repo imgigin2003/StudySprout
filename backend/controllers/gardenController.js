@@ -4,8 +4,16 @@ const Plant = require("../models/Plant");
 const plantSeed = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
-    const { name, plant_type, growthDuration, xpValue, description, isMaster } =
-      req.body;
+    const {
+      name,
+      plant_type,
+      growthDuration,
+      xpValue,
+      description,
+      isMaster,
+      row_index,
+      plot_index,
+    } = req.body;
     const plantType = plant_type;
     const starterPlants = ["cactus", "rose"];
     if (user.streakDays < 7 && !starterPlants.includes(plantType)) {
@@ -21,7 +29,11 @@ const plantSeed = async (req, res, next) => {
       description: description || "",
       isMaster: isMaster || false,
     });
-    user.garden.push({ plant: newPlant._id });
+    user.garden.push({
+      plant: newPlant._id,
+      row_index: row_index,
+      plot_index: plot_index,
+    });
     await user.save();
     await user.populate("garden.plant");
 

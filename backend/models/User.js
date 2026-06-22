@@ -18,6 +18,8 @@ const userSchema = new mongoose.Schema({
         default: "growing",
       },
       currentXP: { type: Number, default: 0 },
+      row_index: { type: Number, required: true },
+      plot_index: { type: Number, required: true },
     },
   ],
   harvestedPlants: [{ type: mongoose.Schema.Types.ObjectId, ref: "Plant" }],
