@@ -55,6 +55,8 @@ export default function GardenPage() {
         growthDuration: data.growthDuration,
         description: data.description,
         isMaster: data.isMaster,
+        row_index: data.row_index,
+        plot_index: data.plot_index,
       });
       loadData();
     } catch (error) {
