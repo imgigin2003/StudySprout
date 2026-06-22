@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
     {
       plant: { type: mongoose.Schema.Types.ObjectId, ref: "Plant" },
       plantedAt: { type: Date, default: Date.now },
+      row_index: { type: Number, required: true },
+      plot_index: { type: Number, required: true },
       plantStatus: {
         type: String,
         enum: ["growing", "ready to harvest", "harvested"],
