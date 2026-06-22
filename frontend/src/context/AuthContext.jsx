@@ -4,14 +4,26 @@ import api from "@/utils/api";
 
 const AuthContext = createContext(null);
 
+const GUEST_KEY = "studysprout_guest";
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
-  const [authChecked, setAuthChecked] = useState(false); // Add this state
-  const [authError, setAuthError] = useState(null); // Add this state
+  const [authChecked, setAuthChecked] = useState(false);
+  const [authError, setAuthError] = useState(null);
 
   const checkUserAuth = async () => {
+    // If the user chose "Continue as Guest" in a previous session, restore that.
+    if (sessionStorage.getItem(GUEST_KEY) === "true") {
+      setIsGuest(true);
+      setIsAuthenticated(false);
+      setIsLoadingAuth(false);
+      setAuthChecked(true);
+      return;
+    }
+
     const token = localStorage.getItem("token");
     if (!token) {
       setIsLoadingAuth(false);
@@ -27,7 +39,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       localStorage.removeItem("token");
       setIsAuthenticated(false);
-      // Map common errors
       if (error.response?.status === 401) {
         setAuthError({ type: "unauthorized", message: "Session expired" });
       }
@@ -41,11 +52,23 @@ export const AuthProvider = ({ children }) => {
     checkUserAuth();
   }, []);
 
+  /** Allow the user to browse the app without an account. */
+  const loginAsGuest = () => {
+    sessionStorage.setItem(GUEST_KEY, "true");
+    setIsGuest(true);
+    setIsAuthenticated(false);
+    setUser(null);
+    setAuthChecked(true);
+    setIsLoadingAuth(false);
+  };
+
   const logout = () => {
     localStorage.removeItem("token");
+    sessionStorage.removeItem(GUEST_KEY);
     setUser(null);
     setIsAuthenticated(false);
-    window.location.href = "/login";
+    setIsGuest(false);
+    window.location.href = "/";
   };
 
   return (
@@ -53,10 +76,12 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         isAuthenticated,
+        isGuest,
         isLoadingAuth,
-        authChecked, // Export this
-        authError, // Export this
-        checkUserAuth, // Export this
+        authChecked,
+        authError,
+        checkUserAuth,
+        loginAsGuest,
         logout,
       }}
     >

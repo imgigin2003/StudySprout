@@ -1,10 +1,15 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
 const protect = async (req, res, next) => {
   try {
+    const JWT_SECRET = process.env.JWT_SECRET;
+
+    if (!JWT_SECRET) {
+      console.error("JWT_SECRET is not defined in environment variables");
+      return res.status(500).json({ message: "Server configuration error" });
+    }
+
     let token = req.headers.authorization;
     if (token && token.startsWith("Bearer")) {
       token = token.split(" ")[1];

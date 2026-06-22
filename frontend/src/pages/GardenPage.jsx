@@ -13,10 +13,12 @@ import XPBar from "@/components/garden/XPBar";
 import CreatePlantModal from "@/components/plant/CreatePlantModal";
 import PlantDetail from "@/components/plant/PlantDetail";
 import { useMusic } from "@/components/MusicProvider";
+import { useAuth } from "@/context/AuthContext";
 import api from "@/utils/api";
 
 export default function GardenPage() {
   const { isPlaying, toggle } = useMusic();
+  const { isGuest } = useAuth();
   const navigate = useNavigate();
   const [plants, setPlants] = useState([]);
   const [stats, setStats] = useState(null);
@@ -28,6 +30,11 @@ export default function GardenPage() {
 
   const loadData = async () => {
     setLoading(true);
+    if (isGuest) {
+      // Guests have no server data — just show an empty garden immediately.
+      setLoading(false);
+      return;
+    }
     try {
       const [gardenRes, profileRes] = await Promise.all([
         api.get("/garden"),
@@ -47,6 +54,24 @@ export default function GardenPage() {
   }, []);
 
   const handleCreatePlant = async (data) => {
+    if (isGuest) {
+      // For guests, add the plant locally so the UI responds.
+      const newPlant = {
+        _id: `guest-${Date.now()}`,
+        name: data.name,
+        plantType: data.plant_type,
+        xpValue: data.xpValue,
+        growthDuration: data.growthDuration,
+        description: data.description,
+        isMaster: data.isMaster,
+        row_index: data.row_index,
+        plot_index: data.plot_index,
+        stage: "seed",
+        createdAt: new Date().toISOString(),
+      };
+      setPlants((prev) => [...prev, newPlant]);
+      return;
+    }
     try {
       await api.post("/garden/plant", {
         name: data.name,
@@ -65,6 +90,11 @@ export default function GardenPage() {
   };
 
   const handleDeletePlant = async (id) => {
+    if (isGuest) {
+      setPlants((prev) => prev.filter((p) => p._id !== id));
+      setSelectedPlant(null);
+      return;
+    }
     try {
       await api.delete("/garden/delete", { data: { plotId: id } });
       setSelectedPlant(null);
@@ -79,6 +109,11 @@ export default function GardenPage() {
   };
 
   const handleHarvestPlant = async (id, markMastered) => {
+    if (isGuest) {
+      setPlants((prev) => prev.filter((p) => p._id !== id));
+      setSelectedPlant(null);
+      return;
+    }
     try {
       await api.post("/garden/harvest", {
         plotId: id,
@@ -98,7 +133,7 @@ export default function GardenPage() {
   };
 
   const totalXP = stats?.totalXP || 0;
-  const gardenName = stats?.gardenName || "My Garden";
+  const gardenName = stats?.gardenName || (isGuest ? "Guest Garden" : "My Garden");
   const streak = stats?.streakDays || 0;
   const focusRate = 0;
 
@@ -112,6 +147,19 @@ export default function GardenPage() {
 
   return (
     <div className="px-4 py-4 lg:px-8 lg:py-8">
+      {/* Guest banner */}
+      {isGuest && (
+        <div className="mb-4 bg-accent/20 border border-accent/40 rounded-md px-3 py-2 text-center">
+          <p className="font-heading text-[7px] text-foreground tracking-wider">
+            🌱 GUEST MODE — DATA IS NOT SAVED.{" "}
+            <a href="/register" className="underline text-primary">
+              CREATE AN ACCOUNT
+            </a>{" "}
+            TO KEEP YOUR GARDEN!
+          </p>
+        </div>
+      )}
+
       {/* Top XP Bar */}
       <div className="mb-4">
         <p className="font-heading text-[7px] text-foreground mb-1">TOTAL XP</p>

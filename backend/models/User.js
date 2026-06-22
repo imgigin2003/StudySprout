@@ -12,16 +12,14 @@ const userSchema = new mongoose.Schema({
     {
       plant: { type: mongoose.Schema.Types.ObjectId, ref: "Plant" },
       plantedAt: { type: Date, default: Date.now },
-      row_index: { type: Number, required: true },
-      plot_index: { type: Number, required: true },
+      row_index: { type: Number, default: 0 },
+      plot_index: { type: Number, default: 0 },
       plantStatus: {
         type: String,
         enum: ["growing", "ready to harvest", "harvested"],
         default: "growing",
       },
       currentXP: { type: Number, default: 0 },
-      row_index: { type: Number, required: true },
-      plot_index: { type: Number, required: true },
     },
   ],
   harvestedPlants: [{ type: mongoose.Schema.Types.ObjectId, ref: "Plant" }],
