@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.static("Public"));
 app.use(
   cors({
-    origin: "https://imgigin2003.github.io",
+    origin: ["https://imgigin2003.github.io", "https://studysprout.pages.dev"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
