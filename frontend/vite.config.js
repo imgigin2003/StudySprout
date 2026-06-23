@@ -11,4 +11,8 @@ export default defineConfig({
     },
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
+  server: {
+    host: '0.0.0.0',
+    port: 5173, // یا هر پورتی که میخوای
+  },
 });
