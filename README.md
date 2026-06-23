@@ -6,6 +6,8 @@
 
 StudySprout is a gamified productivity app that turns focused study time into a flourishing virtual garden. Complete Pomodoro sessions to earn XP, grow unique plants, unlock rare species through daily streaks, and build a beautiful display of your academic achievements.
 
+## [Go to WebApp 🌱]("https://studysprout.pages.dev")
+
 ---
 
 ## ✨ Features
@@ -129,7 +131,7 @@ mongod
 | ------- | ---------------------- |
 | Day 0+  | 🌹 Rose, 🌵 Cactus     |
 | Day 7+  | 🌻 Sunflower, 🌷 Tulip |
-| Day 14+ | ☘️ Fern, 🌼 Daisy      |
+| Day 14+ | ☘️ Fern, 🌼 Daisy etc..|      |
 
 ---
 
@@ -139,11 +141,9 @@ mongod
 - [x] React Frontend with Vite + Tailwind
 - [x] Pomodoro Timer with session tracking
 - [x] Interactive Garden Dashboard
+- [x] Leaderboards & achievements
 - [x] Streak-based plant unlocks with lock UI
 - [x] Sound effects on interactions
-- [ ] Social Features — view friends' gardens
-- [ ] Mobile app (React Native)
-- [ ] Leaderboards & achievements
 
 ---
 
