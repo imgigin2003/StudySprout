@@ -1,0 +1,11 @@
+{
+  "appId": "com.studysprout.app",
+  "appName": "StudySprout",
+  "webDir": "dist",
+  "ios": {
+    "contentInset": "always"
+  },
+  "server": {
+    "iosScheme": "https"
+  }
+}
