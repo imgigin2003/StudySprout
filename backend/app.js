@@ -10,11 +10,31 @@ const pomodoroRoutes = require("./routes/pomodoroRoutes");
 
 const app = express();
 
+// Origins allowed to call the API. The web app runs on its domain, but the
+// packaged native apps make requests from their own webview origins, which the
+// backend must also allow — otherwise login/register fail only inside the apps.
+const allowedOrigins = [
+  "https://studysprout.pages.dev", // production web
+  "http://localhost:5173", // Vite dev server
+  "tauri://localhost", // Tauri desktop (macOS)
+  "http://tauri.localhost", // Tauri desktop (Windows/Linux)
+  "https://tauri.localhost",
+  "capacitor://localhost", // Capacitor iOS
+  "http://localhost", // Capacitor Android
+];
+
 app.use(express.json());
 app.use(express.static("Public"));
 app.use(
   cors({
-    origin: "https://studysprout.pages.dev",
+    origin: (origin, callback) => {
+      // Allow requests with no Origin header (native HTTP clients, curl) and
+      // any origin in the allow-list above.
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],

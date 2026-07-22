@@ -18,7 +18,7 @@
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "icons:gen": "node scripts/gen-icons.mjs",
-    "icons:native": "node scripts/gen-icons.mjs && tauri icon assets/icon.png && capacitor-assets generate --assetPath assets",
+    "icons:native": "node scripts/gen-icons.mjs && tauri icon assets/icon.png && npx -y @capacitor/assets generate --assetPath assets",
     "tauri": "tauri"
   },
   "dependencies": {
@@ -95,7 +95,6 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.4.2",
     "@eslint/js": "^9.0.0",
     "@tauri-apps/cli": "^2.11.4",
