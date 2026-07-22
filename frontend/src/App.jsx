@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClientInstance } from "./lib/query-client";
 import {
@@ -7,6 +8,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+import SplashScreen from "./components/SplashScreen";
 import PageNotFound from "./lib/PageNotFound";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { MusicProvider } from "./components/MusicProvider";
@@ -26,12 +28,15 @@ import GardenLayout from "./components/layout/GardenLayout";
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isAuthenticated, isGuest, authChecked } = useAuth();
 
-  // 1. Show loading spinner while checking auth
-  if (isLoadingAuth || !authChecked) {
+  // 1. Show the cute splash until the user taps "Continue".
+  //    The buttons appear once the auth check has finished (`ready`).
+  const [entered, setEntered] = useState(false);
+  if (!entered) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
+      <SplashScreen
+        ready={authChecked && !isLoadingAuth}
+        onContinue={() => setEntered(true)}
+      />
     );
   }
 
