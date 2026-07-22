@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { motion } from "framer-motion";
 import PixelSprout from "./PixelSprout";
+import { openExternal } from "@/utils/openExternal";
 
 const CREATOR = "Negin";
 const GITHUB_URL = "https://github.com/imgigin2003/StudySprout";
@@ -102,6 +103,10 @@ export default function SplashScreen({ ready = false, onContinue }) {
             href={PORTFOLIO_URL}
             target="_blank"
             rel="noreferrer noopener"
+            onClick={(e) => {
+              e.preventDefault();
+              openExternal(PORTFOLIO_URL);
+            }}
             className="w-full text-center font-heading text-xs sm:text-sm px-6 py-3 bg-secondary text-secondary-foreground border-b-4 border-border rounded-md transition-all hover:brightness-105 active:translate-y-0.5 active:border-b-2"
           >
             Contact me
@@ -121,6 +126,10 @@ export default function SplashScreen({ ready = false, onContinue }) {
           href={GITHUB_URL}
           target="_blank"
           rel="noreferrer noopener"
+          onClick={(e) => {
+            e.preventDefault();
+            openExternal(GITHUB_URL);
+          }}
           aria-label="View StudySprout on GitHub"
           className="text-muted-foreground transition-colors hover:text-primary"
         >
