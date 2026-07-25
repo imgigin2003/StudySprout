@@ -6,6 +6,7 @@
     "contentInset": "always"
   },
   "server": {
-    "iosScheme": "https"
+    "iosScheme": "https",
+    "androidScheme": "http"
   }
 }
