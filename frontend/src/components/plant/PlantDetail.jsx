@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Play, Trash2, Sprout } from "lucide-react";
+import { X, Play, Trash2, Sprout, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PlantEmoji, {
   getGrowthStage,
@@ -23,6 +23,7 @@ export default function PlantDetail({
 }) {
   const [confirmHarvest, setConfirmHarvest] = useState(false);
   const [markMastered, setMarkMastered] = useState(false);
+  const [confirmMaster, setConfirmMaster] = useState(false);
 
   if (!isOpen || !plant) return null;
 
@@ -41,6 +42,15 @@ export default function PlantDetail({
     setConfirmHarvest(false);
     setMarkMastered(false);
   };
+
+  // "Mark as mastered" = early mastery: fills XP to max, flags the plant as
+  // mastered, and moves it to the shelf so it can go on the display window.
+  const handleMasterConfirm = () => {
+    onHarvest(plant._id, true);
+    setConfirmMaster(false);
+  };
+
+  const alreadyMastered = plant.plant?.isMaster;
 
   return (
     <>
@@ -89,35 +99,89 @@ export default function PlantDetail({
             )}
           </div>
 
-          <div className="flex gap-2 mt-5">
-            {isReadyToHarvest ? (
+          <div className="mt-5 space-y-2">
+            <div className="flex gap-2">
+              {isReadyToHarvest ? (
+                <Button
+                  onClick={() => setConfirmHarvest(true)}
+                  className="flex-1 font-heading text-[8px] tracking-wider h-10 bg-yellow-600 hover:bg-yellow-700"
+                >
+                  <Sprout size={14} className="mr-1" /> HARVEST
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    onClose();
+                    onStudy(plant);
+                  }}
+                  className="flex-1 font-heading text-[8px] tracking-wider h-10"
+                >
+                  <Play size={14} className="mr-1" /> STUDY NOW
+                </Button>
+              )}
               <Button
-                onClick={() => setConfirmHarvest(true)}
-                className="flex-1 font-heading text-[8px] tracking-wider h-10 bg-yellow-600 hover:bg-yellow-700"
+                variant="destructive"
+                onClick={() => onDelete(plant._id)}
+                className="font-heading text-[8px] tracking-wider h-10 px-3"
               >
-                <Sprout size={14} className="mr-1" /> HARVEST
+                <Trash2 size={14} />
               </Button>
-            ) : (
+            </div>
+
+            {/* Mark as mastered — shown while the plant is still growing, lets
+                the user instantly master it (max XP + eligible for display). */}
+            {!isReadyToHarvest && !alreadyMastered && (
               <Button
-                onClick={() => {
-                  onClose();
-                  onStudy(plant);
-                }}
-                className="flex-1 font-heading text-[8px] tracking-wider h-10"
+                variant="outline"
+                onClick={() => setConfirmMaster(true)}
+                className="w-full font-heading text-[8px] tracking-wider h-10 border-primary/40 text-primary hover:bg-primary/10"
               >
-                <Play size={14} className="mr-1" /> STUDY NOW
+                <Award size={14} className="mr-1" /> MARK AS MASTERED
               </Button>
             )}
-            <Button
-              variant="destructive"
-              onClick={() => onDelete(plant._id)}
-              className="font-heading text-[8px] tracking-wider h-10 px-3"
-            >
-              <Trash2 size={14} />
-            </Button>
           </div>
         </div>
       </div>
+
+      {confirmMaster && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/40 p-4">
+          <div className="w-full max-w-sm bg-card border-2 border-border rounded-lg p-5">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="text-4xl">🏆</div>
+              <h3 className="font-heading text-xs text-foreground">
+                MARK AS MASTERED?
+              </h3>
+              <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                Are you sure you've mastered{" "}
+                <span className="text-foreground font-medium">
+                  {plant.plant?.name}
+                </span>
+                ? This fills it to{" "}
+                <span className="text-foreground font-medium">
+                  {plant.plant?.xpValue} XP
+                </span>{" "}
+                and moves it to your shelf, ready for the display window.
+              </p>
+
+              <div className="flex gap-2 w-full">
+                <Button
+                  variant="outline"
+                  onClick={() => setConfirmMaster(false)}
+                  className="flex-1 font-heading text-[8px] tracking-wider h-10"
+                >
+                  CANCEL
+                </Button>
+                <Button
+                  onClick={handleMasterConfirm}
+                  className="flex-1 font-heading text-[8px] tracking-wider h-10 bg-primary hover:bg-primary/90"
+                >
+                  MASTER 🏆
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {confirmHarvest && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/40 p-4">
