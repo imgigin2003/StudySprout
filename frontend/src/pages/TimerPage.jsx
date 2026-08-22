@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "@/utils/api";
 import { ChevronLeft, VolumeX, Volume2 } from "lucide-react";
@@ -16,6 +16,7 @@ export default function TimerPage() {
   const [plant, setPlant] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [loading, setLoading] = useState(!!plotId && !isGuest);
+  const [timerResetSignal, setTimerResetSignal] = useState(0);
 
   useEffect(() => {
     if (plotId && !isGuest) {
@@ -49,12 +50,13 @@ export default function TimerPage() {
 
   const handleComplete = async () => {
     if (isGuest) {
-      navigate("/garden");
+      setTimerResetSignal((signal) => signal + 1);
       return;
     }
     try {
       await api.post("/pomodoro/complete", { sessionId });
-      navigate("/garden");
+      setSessionId(null);
+      setTimerResetSignal((signal) => signal + 1);
     } catch (error) {
       console.error(
         "Failed to complete session:",
@@ -132,6 +134,7 @@ export default function TimerPage() {
         onStart={handleStart}
         onComplete={handleComplete}
         onCancel={handleCancel}
+        resetSignal={timerResetSignal}
       />
     </div>
   );

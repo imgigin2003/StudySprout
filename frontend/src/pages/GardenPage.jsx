@@ -222,7 +222,7 @@ export default function GardenPage() {
             label="PLANTS"
           />
           <StatCard
-            icon={<span className="text-lg">⭐</span>}
+            icon={<PixelStarIcon />}
             value={totalXP}
             label="TOTAL XP"
           />
@@ -257,6 +257,23 @@ export default function GardenPage() {
         onHarvest={handleHarvestPlant}
       />
     </div>
+  );
+}
+
+function PixelStarIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 5 5"
+      className="w-[22px] h-[22px] text-primary"
+      shapeRendering="crispEdges"
+    >
+      <path
+        fill="currentColor"
+        d="M2 0h1v1h1v1h1v1H4v1H3v1H2V4H1V3H0V2h1V1h1z"
+      />
+      <path fill="hsl(var(--card))" d="M2 1h1v1h1v1H3v1H2V3H1V2h1z" />
+    </svg>
   );
 }
 

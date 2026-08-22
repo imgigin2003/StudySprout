@@ -1,13 +1,25 @@
 // @ts-nocheck
 
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Sprout, Timer, BookOpen, LogOut } from "lucide-react";
 import SoundLink from "@/components/SoundLink";
 import { useAuth } from "@/context/AuthContext";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Navbar() {
   const location = useLocation();
   const { user, isGuest, logout } = useAuth();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const gardenLabel = isGuest
     ? "GUEST GARDEN"
@@ -48,7 +60,7 @@ export default function Navbar() {
           })}
           {/* Mobile logout button */}
           <button
-            onClick={logout}
+            onClick={() => setShowLogoutConfirm(true)}
             className="flex flex-col items-center gap-1 px-4 py-2 rounded-md transition-all text-primary-foreground/60 hover:text-primary-foreground/80"
             aria-label="Logout"
           >
@@ -95,7 +107,7 @@ export default function Navbar() {
         {/* Desktop logout button at the bottom */}
         <div className="px-3 py-5 border-t-2 border-border">
           <button
-            onClick={logout}
+            onClick={() => setShowLogoutConfirm(true)}
             className="w-full flex items-center gap-3 px-3 py-3 rounded-md transition-all text-primary-foreground/60 hover:text-primary-foreground/80 hover:bg-primary-foreground/10"
             aria-label="Logout"
           >
@@ -106,6 +118,29 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+      <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+        <AlertDialogContent className="border-2 border-border bg-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-heading text-sm text-foreground">
+              LOG OUT OF STUDYSPROUT?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="font-body text-base text-muted-foreground">
+              Your local session will be cleared. You can log back in whenever you’re ready.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="font-heading text-[8px] tracking-wider">
+              CANCEL
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={logout}
+              className="bg-destructive text-destructive-foreground font-heading text-[8px] tracking-wider hover:bg-destructive/90"
+            >
+              YES, LOG OUT
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

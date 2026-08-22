@@ -15,6 +15,7 @@ export default function PomodoroTimer({
   onStart,
   onComplete,
   onCancel,
+  resetSignal,
 }) {
   const [focusMinutes, setFocusMinutes] = useState(25);
   const [shortBreak, setShortBreak] = useState(5);
@@ -30,6 +31,14 @@ export default function PomodoroTimer({
     : focusMinutes * 60;
   const progress = ((totalTime - timeLeft) / totalTime) * 100;
   const isLocked = !plant;
+
+  useEffect(() => {
+    clearInterval(intervalRef.current);
+    setTimeLeft(focusMinutes * 60);
+    setIsRunning(false);
+    setSession(1);
+    setIsBreak(false);
+  }, [resetSignal]);
 
   const playSessionComplete = useSound("/sounds/session-complete.mp3", {
     volume: 0.6,
@@ -97,6 +106,7 @@ export default function PomodoroTimer({
   const secs = timeLeft % 60;
 
   const handleComplete = () => {
+    setIsRunning(false);
     const minutesStudied =
       Math.ceil((totalTime - timeLeft) / 60) + (session - 1) * focusMinutes;
     playSessionComplete();
@@ -185,6 +195,7 @@ export default function PomodoroTimer({
         <button
           onClick={isRunning ? pauseTimer : startTimer}
           disabled={isLocked}
+          aria-label={isRunning ? "Pause timer" : "Start timer"}
           className={`w-16 h-16 bg-secondary border-2 border-border rounded-lg flex items-center justify-center transition-colors ${isLocked ? "opacity-30 cursor-not-allowed" : "hover:bg-secondary/80"}`}
         >
           {isRunning ? (
@@ -196,6 +207,7 @@ export default function PomodoroTimer({
         <button
           onClick={handleComplete}
           disabled={isLocked}
+          aria-label="Complete Pomodoro"
           className={`w-16 h-16 bg-secondary border-2 border-border rounded-lg flex items-center justify-center transition-colors ${isLocked ? "opacity-30 cursor-not-allowed" : "hover:bg-secondary/80"}`}
         >
           <Check size={28} className="text-chart-1" />
@@ -203,6 +215,7 @@ export default function PomodoroTimer({
         <button
           onClick={onCancel}
           disabled={isLocked}
+          aria-label="Cancel Pomodoro"
           className={`w-16 h-16 bg-destructive/10 border-2 border-destructive/30 rounded-lg flex items-center justify-center transition-colors ${isLocked ? "opacity-30 cursor-not-allowed" : "hover:bg-destructive/20"}`}
         >
           <X size={28} className="text-destructive" />
