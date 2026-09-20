@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2, Volume2, VolumeX } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
+import { storage } from "@/utils/storage";
 import api from "@/utils/api";
 import { useAuth } from "@/context/AuthContext";
 import { useMusic } from "@/components/MusicProvider";
@@ -29,7 +30,7 @@ export default function Login() {
       const { token } = response.data;
 
       if (token) {
-        localStorage.setItem("token", token);
+        await storage.setItem("token", token);
         await checkUserAuth();
         navigate("/garden");
       }

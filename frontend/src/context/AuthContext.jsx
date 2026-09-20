@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { createContext, useState, useContext, useEffect } from "react";
 import api from "@/utils/api";
+import { storage } from "@/utils/storage";
 
 const AuthContext = createContext(null);
 
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    const token = localStorage.getItem("token");
+    const token = await storage.getItem("token");
     if (!token) {
       setIsLoadingAuth(false);
       setAuthChecked(true);
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setAuthError(null);
     } catch (error) {
-      localStorage.removeItem("token");
+      await storage.removeItem("token");
       setIsAuthenticated(false);
       if (error.response?.status === 401) {
         setAuthError({ type: "unauthorized", message: "Session expired" });
@@ -62,8 +63,8 @@ export const AuthProvider = ({ children }) => {
     setIsLoadingAuth(false);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
+  const logout = async () => {
+    await storage.removeItem("token");
     sessionStorage.removeItem(GUEST_KEY);
     setUser(null);
     setIsAuthenticated(false);
