@@ -1,8 +1,28 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "main": "electron-main.cjs",
+  "build": {
+    "appId": "com.studysprout.desktop",
+    "productName": "StudySprout",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src-tauri/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "dist/**/*",
+      "electron-main.cjs"
+    ]
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,6 +32,7 @@
     "preview": "vite preview",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
+    "electron:build:win": "npm run build && electron-builder --win",
     "ios:sync": "npm run build && cap sync ios",
     "ios:open": "cap open ios",
     "android:add": "cap add android",
@@ -102,6 +123,8 @@
     "@vitejs/plugin-react": "^6.0.2",
     "autoprefixer": "^10.5.0",
     "baseline-browser-mapping": "^2.10.37",
+    "electron": "^44.4.3",
+    "electron-builder": "^26.15.3",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
