@@ -6,7 +6,8 @@
 
 StudySprout is a gamified productivity app that turns focused study time into a flourishing virtual garden. Complete Pomodoro sessions to earn XP, grow unique plants, unlock rare species through daily streaks, and build a beautiful display of your academic achievements.
 
-## [Go to WebApp](https://studysprout.pages.dev) [Donwload Native APK & Mac](https://github.com/imgigin2003/StudySprout/releases/tag/v0.1.0) 🌱
+## [Go to WebApp](https://studysprout.pages.dev) 🌱
+## [Download Native APK & Mac](https://github.com/imgigin2003/StudySprout/releases/tag/v0.1.0) 🌱
 
 ---
 
