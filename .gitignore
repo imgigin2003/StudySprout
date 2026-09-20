@@ -45,3 +45,4 @@ frontend/android/build
 frontend/android/local.properties
 frontend/android/app/src/main/assets/public
 
+package-lock.json
